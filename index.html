@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pro Tic Tac Toe</title>
+<h6 style="color:grey">lol</h6>
+<h1 style="color:grey" align="center">Pro Tic Tac Toe</h1>
+
+<script type="text/javascript">
+//Der Programmanteil des Computergegners ist nicht in der Facharbeit enthalten, weil dieser erst später hinzugefügt wurde.
+
+var naechster = 1;
+var naechstebox = 0;
+var siegespieler1 = 0;
+var siegespieler2 = 0;
+var b_id3 = 1;
+var spieler1 = "#DF0101";
+var spieler2 = "#0000FF"; 
+var spieler12 = "#F5A9A9";
+var spieler22 = "#A9BCF5";
+var feld = new Array(10);
+var erster = 1
+var spielmodus = 1
+var schwierigkeit = "leicht"
+
+for(a=1; a<=9; a++){
+   feld[a] = new Array(10);
+   
+   for(b=0; b<=9; b++)  
+      feld[a][b] = 0;     
+}
+
+function neu(){
+   for(a=1; a<=9; a++){
+      document.getElementById(a).style = "background-color:undefined";
+      document.getElementById(a).style = "border-color:undefined"; 
+      feld[a][0] = 0;
+      for(b=1; b<=9; b++){
+         feld[a][b] = 0;
+         document.getElementById(10*a+b).style = "background-color:undefined";
+      }      
+   }
+   if(erster == 1)
+      erster = 2
+      else 
+         erster = 1
+   naechster = erster;
+   naechstebox = 0;
+   b_id3 = 1;
+//erster Spielzug des Computers für die nächste Runde  
+   if(spielmodus == 2 && naechster == 2){
+      do{
+         zahl1 = Math.round(Math.random()*9);
+         zahl2 = Math.round(Math.random()*9);  
+      }
+      while(zahl1*zahl2 == 0)
+      klick(zahl1*10 + zahl2)
+   }
+}
+
+function feldvoll(f){
+   ergebnis = 1
+   for(a=1; a<=9; a++)
+      if(feld[f][a] == 0)
+         ergebnis = 0
+   return ergebnis   
+}      
+
+function boxx(box2,s,a,b,c){
+   if(feld[box2][a]==s&&feld[box2][b]==s&&feld[box2][c]==s)
+      return s
+}
+
+function boxsieg(bs,box){
+   if(feld[box][0]==0 && (boxx(box,bs,1,2,3)==bs||boxx(box,bs,4,5,6)==bs||boxx(box,bs,7,8,9)==bs||boxx(box,bs,1,4,7)==bs||boxx(box,bs,2,5,8)==bs||boxx(box,bs,3,6,9)==bs||boxx(box,bs,1,5,9)==bs||boxx(box,bs,3,5,7)==bs)){
+      feld[box][0] = bs;
+      if(bs == 1){
+         document.getElementById(box).style = "background-color:" + spieler12;
+      }
+      else{
+         document.getElementById(box).style = "background-color:" + spieler22;
+      }
+   }     
+}
+
+function spiell(s,a,b,c){
+   if(feld[a][0]==s&&feld[b][0]==s&&feld[c][0]==s)
+      return s
+}
+
+function spielsieg(ss){
+      if(spiell(ss,1,2,3)==ss||spiell(ss,4,5,6)==ss||spiell(ss,7,8,9)==ss||spiell(ss,1,4,7)==ss||spiell(ss,2,5,8)==ss||spiell(ss,3,6,9)==ss||spiell(ss,1,5,9)==ss||spiell(ss,3,5,7)==ss){
+         if(ss == 1){
+            document.getElementById(0).style = "border-color:" + spieler1;
+            siegespieler1 = siegespieler1 + 1;
+            document.getElementById("links").firstChild.nodeValue = spieler1name + ": " + siegespieler1;
+         }
+         else{
+            document.getElementById(0).style = "border-color:" + spieler2;
+            siegespieler2 = siegespieler2 + 1;
+            document.getElementById("rechts").firstChild.nodeValue = spieler2name + ": " + siegespieler2;
+         }
+         neu()
+      }         
+}
+
+function feldvoll(f){
+   ergebnis = 1
+   for(a=1; a<=9; a++){
+      if(feld[f][a] == 0)
+         ergebnis = 0
+   }     
+   return ergebnis   
+}  
+
+function bgcakt(box3){
+   if(feld[box3][0] == 1)
+      document.getElementById(box3).style = "background-color:" + spieler12;
+   if(feld[box3][0] == 2)
+      document.getElementById(box3).style = "background-color:" + spieler22;
+}
+
+function klick(eingabe){
+   k_id2 = eingabe%10
+   b_id2 = Math.floor(eingabe/10)
+
+   if(naechstebox == 0)
+      abbruch = 0;
+      else abbruch = 1
+
+   if(feld[b_id2][k_id2] == 0 && naechstebox == b_id2*abbruch){
+            
+      feld[b_id2][k_id2] = naechster;
+      naechstebox = k_id2;
+      document.getElementById(b_id2).style = "border-color:undefined";
+      document.getElementById(b_id3).style = "border-color:undefined";
+      bgcakt(b_id2);
+      bgcakt(b_id3);
+      b_id3 = k_id2;
+//die ständigen Farb-wiederherstellungen sind nötig, weil sich Hintergrundfarbe und Randfarbe gegenseitig überschreiben
+      if(naechster == 1){
+         document.getElementById(eingabe).style = "background-color:" + spieler1;
+         boxsieg(1,b_id2);
+         document.getElementById(k_id2).style = "border-color:" + spieler2;
+         naechster = 2;
+         spielsieg(1);
+      } 
+      else{
+         document.getElementById(eingabe).style = "background-color:" + spieler2;
+         boxsieg(2,b_id2);
+         document.getElementById(k_id2).style = "border-color:" + spieler1;
+         naechster = 1;
+         spielsieg(2);
+      }       
+      if(feldvoll(k_id2) == 1)
+         naechstebox = 0;  
+   }        
+//Computerspieler   
+   if(spielmodus == 2 && naechster == 2){
+      if(naechstebox == 0){
+         do{
+            zahl1 = Math.round(Math.random()*9);
+            zahl2 = Math.round(Math.random()*9);  
+            }
+         while(zahl1*zahl2 == 0 || feld[zahl1][zahl2] != 0)
+         klick(zahl1*10 + zahl2)
+      }
+      else{
+      do zahl = Math.round(Math.random()*9)  
+      while(zahl == 0 || feld[k_id2][zahl] != 0)
+      klick(k_id2*10 + zahl) 
+      }      
+   }
+}      
+
+function los(id){
+   
+   spieler1 = document.getElementById("spieler11").value
+   spieler12 = document.getElementById("spieler12").value
+   spieler2 = document.getElementById("spieler21").value
+   spieler22 = document.getElementById("spieler22").value
+   
+   document.getElementById("0").style = "visibility:visible"
+   document.getElementById("spielstand").style = "visibility:visible"
+   document.getElementById("tabelle").style = "visibility:hidden"
+   document.getElementById("tabelle2").style = "visibility:hidden"
+   
+   document.getElementById("links").style = "background-color:" + spieler1;
+   document.getElementById("rechts").style = "background-color:" + spieler2;  
+
+   document.getElementById("links").firstChild.nodeValue = spieler1name + ": " + siegespieler1;
+   document.getElementById("rechts").firstChild.nodeValue = spieler2name + ": " + siegespieler2;
+}
+
+
+function f_spielmodus(sm){
+   spielmodus = sm
+   if(sm == 2){
+      document.getElementById("tabelle2").style = "visibility:visible";
+      document.getElementById("spieler2eingabe").value = "Computer(" + schwierigkeit + ")" 
+      document.getElementById("spieler2eingabe").setAttribute("readonly", "readonly");
+   }  
+   else{
+      document.getElementById("tabelle2").style = "visibility:hidden";
+      document.getElementById("spieler2eingabe").value = "Spieler 2" 
+      document.getElementById("spieler2eingabe").removeAttribute("readonly");
+   }
+   spieler1name = document.getElementById("spieler1eingabe").value;
+   spieler2name = document.getElementById("spieler2eingabe").value;  
+}
+
+//weitere Schwierigkeitsstufen fehlen noch
+function f_schwierigkeit(sk){
+   schwierigkeit = sk
+}
+
+document.write('<table id="spielstand" style="visibility:hidden" cellspacing="10" cellpadding="10" align="center">'+
+                  '<tr>'+
+                  '<td id="links" style="background-color:'+ spieler1 +'">'+
+                  'Spieler1: '+ siegespieler1 +
+                  '</td>'+
+                  '<td id="rechts" style="background-color:'+ spieler2 +'">'+
+                  'Spieler2: '+ siegespieler2 +
+                  '</td>'+
+                  '</tr>'+
+               '</table>');
+   
+document.write('<table id="0" style="visibility:hidden" border="5" cellspacing="10" cellpadding="10" align="center" frame="void">');
+for(a = 0; a < 3; a++){
+   document.write('<tr>');
+
+   for(b = 1; b <= 3; b++){
+      b_id = 3*a+b 
+      document.write('<td>' + '<table id="'+ b_id +'" border="2" cellspacing="5">');
+      
+      for(c = 0; c < 3; c++){
+         document.write('<tr>');
+            
+         for(d = 1; d <= 3; d++){
+            k_id = 10*b_id+3*c+d
+            document.write('<td id="'+ k_id +'" height="50" width="50" onclick="klick('+ k_id +');">');   
+         }
+         document.write('</tr>');
+      }
+      document.write('</table>' + '</td>');
+   }      
+   document.write('</tr>');
+}
+document.write('</table>');        
+
+</script>
+</head>
+
+<body>
+<table id="tabelle" align="center" cellspacing="2" cellpadding="2" border="0">       
+   <tr>
+      <td>
+         Farbcodes gibts <a href="http://html-color-codes.info/webfarben_hexcodes/" target="_blank">hier</a>!
+      </td>
+      <td>
+         <input type="text" id="spieler1eingabe" value="Spieler 1">
+      </td>
+      <td>   
+         <input type="text" id="spieler2eingabe" value="Spieler 2">
+      </td> 
+      <td>
+         <select size="1">
+         <option onclick="f_spielmodus(1)">Mehrspieler</option>
+         <option onclick="f_spielmodus(2)">Einzelspieler</option>
+         </select>
+      </td>
+      <td>
+         <input type="button" value="Start" onclick="los()">
+      </td> 
+   </tr>    
+   <tr>
+      <td>
+         Farbe1 (K&aumlstchen)
+      </td>         
+      <td>
+         <input type="text" id="spieler11" value="#DF0101">
+      </td>
+      <td>
+         <input type="text" id="spieler21" value="#0000FF">
+      </td>
+      <td>
+         <select id="tabelle2" size="1" style="visibility:hidden">
+         <option onclick="schwierigkeit()">leicht</option>
+         </select>
+      </td>
+   </tr>
+   <tr>
+      <td>
+         Farbe2 (Felder)
+      </td>
+      <td>
+         <input type="text" id="spieler12" value="#F5A9A9">
+      </td>
+      <td>
+         <input type="text" id="spieler22" value="#A9BCF5">
+      </td>
+   </tr>   
+</table>
+
+</body>
+</html>
