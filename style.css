@@ -1,0 +1,17 @@
+body {
+  color: grey;
+}
+
+h1 {
+  text-align: center;
+}
+
+div {
+  background-color: red;
+}
+
+#test {
+  background-color: red;
+  width: 100px;
+  height: 200px;
+}
