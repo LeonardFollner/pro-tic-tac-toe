@@ -1,17 +1,103 @@
-body {
-  color: grey;
+html,body {
+  height: 98%;
 }
 
-h1 {
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #4f5b66;
+  color: #eff1f5;
+}
+
+li {
+  list-style: none;
+  color: #eff1f5;
+}
+
+a {
+  text-decoration: none;
+  color: #a3be8c;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+input {
+  color: #2b303b;
+}
+
+.box {
+  background-color: #c0c5ce;
+  height: 50px;
+  width: 50px;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.button {
+  width: 81px;
+  height: 42px;
+  margin: 20px;
+  line-height: 42px;
+}
+
+.buttonRound {
+  width: 120px;
+  height: 42px;
+  margin: 20px;
+  line-height: 42px;
+  border: 1px solid #2b303b;
+}
+
+.buttonRound:hover {
+  background-color: #c0c5ce;
+}
+
+.invisible {
+  display: none;
+}
+
+.inline {
+  display: inline;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.centerText{
   text-align: center;
 }
 
-div {
-  background-color: red;
+.center {
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#test {
-  background-color: red;
-  width: 100px;
-  height: 200px;
+.hint {
+  color: #c0c5ce;
+}
+
+.leaderboard th {
+  border:1px solid #2b303b;
+}
+
+.leaderboard tr:nth-child(even) {
+  background-color: rgba(192, 197, 206, 0.6);
+}
+
+.parent {
+  height: 100%;
+}
+
+.element {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+#feld {
+  background-color: #4f5b66;
 }

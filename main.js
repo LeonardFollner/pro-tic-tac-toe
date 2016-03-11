@@ -1,220 +1,587 @@
-function main(id){
-  //Variabllendeklaration
-  var spieler1colK = document.getElementById("spieler1colK").value;
-  var spieler1colF = document.getElementById("spieler1colF").value;
-  var spieler2colK = document.getElementById("spieler2colK").value;
-  var spieler2colF = document.getElementById("spieler2colF").value;
-  var spieler1name = document.getElementById("spieler1eingabe").value;
-  var spieler2name = document.getElementById("spieler2eingabe").value;
-  var naechster = 1;
-  var naechstebox = 0;
-  var siegespieler1 = 0;
-  var siegespieler2 = 0;
-  var b_id3 = 1;
-  var erster = 1;
+var drawingArea;
+var player, nextField, currentField, currentBox, color;
+var field, wonFields;
+var first = 1;
+var count = 1;
+var leaderboard;
+var winner, player1, player2, playerTemp;
+var newPlayer;
+var table, numberOfRows, row;
 
-  var feld = new Array(10);
-  for(a=1; a<=9; a++){
-     feld[a] = new Array(10);
-     for(b=0; b<=9; b++){
-        feld[a][b] = 0;
+function init() {
+  leaderboard = [];
+}
+
+function startGame() {
+  document.getElementById("menu").className = "invisible";
+  document.getElementById("startTable").className = "";
+}
+
+function main(){
+  //Variablendeklaration
+  player1 = {
+    name:document.info1.player1Name.value,
+    color:document.getElementById("spieler1colK").value,
+    colorBack:document.getElementById("spieler1colF").value
+  };
+  player2 = {
+    name:document.info2.player2Name.value,
+    color:document.getElementById("spieler2colK").value,
+    colorBack:document.getElementById("spieler2colF").value
+  };
+
+  player = (Math.ceil(Math.random()*2)-1);
+
+  field = new Array(10);
+  for(a = 1; a <= 9; a++){
+     field[a] = new Array(10);
+     for(b = 1; b <= 9; b++){
+        field[a][b] = "x";
       }
+  }
+
+  wonFields = new Array(10);
+  for(c = 1; c <= 9; c++) {
+    wonFields[c] = "x";
   }
 
   draw();
-  /*document.getElementById("0").style = "visibility:visible";
-  document.getElementById("spielstand").style = "visibility:visible";
-  document.getElementById("tabelle").style = "visibility:hidden";*/
+}
 
-  document.getElementById("links").style = "background-color:" + spieler1colK;
-  document.getElementById("rechts").style = "background-color:" + spieler2colK;
-
-  document.getElementById("links").firstChild.nodeValue = spieler1name + ": " + siegespieler1;
-  document.getElementById("rechts").firstChild.nodeValue = spieler2name + ": " + siegespieler2;
+function toggle(id) {
+  if (document.getElementById(id).className === "") {
+    document.getElementById(id).className = "invisible";
+  }
+  else {
+    document.getElementById(id).className = "";
+  }
+}
 
 function draw() {
-  //print table "spielstand"
-  document.write('<table id="spielstand" cellspacing="10" cellpadding="10" align="center">'+
-                    '<tr>'+
-                    '<td id="links" style="background-color:'+ spieler1colK +'">'+
-                    'Spieler1: '+ siegespieler1 +
-                    '</td>'+
-                    '<td id="rechts" style="background-color:'+ spieler2colK +'">'+
-                    'Spieler2: '+ siegespieler2 +
-                    '</td>'+
-                    '</tr>'+
-                 '</table>');
+  document.getElementById("startTable").className = "invisible";
+  toggle("drawingArea");
+  document.getElementById("turn").className = "";
+  document.getElementById("turn1").innerHTML = player1.name;
+  document.getElementById("turn2").innerHTML = player2.name;
 
-  //print table "0"
-  document.write('<table id="0" border="5" cellspacing="10" cellpadding="10" align="center" frame="void">');
-  for(a = 0; a < 3; a++){
-     document.write('<tr>');
-
-     for(b = 1; b <= 3; b++){
-        b_id = 3*a+b;
-        document.write('<td>' + '<table id="'+ b_id +'" border="1" cellspacing="5">');
-
-        for(c = 0; c < 3; c++){
-           document.write('<tr>');
-
-           for(d = 1; d <= 3; d++){
-              k_id = 10*b_id+3*c+d;
-              document.write('<td id="'+ k_id +'" class="Zelle" bgcolor="#dddddd" height="50" width="50" onclick="klick('+ k_id +');"><p>' + k_id + '</p>');
-           }
-           document.write('</tr>');
-        }
-        document.write('</table>' + '</td>');
-     }
-     document.write('</tr>');
+  if (player == 1) {
+    document.getElementById("turn1").style.background = "";
+    document.getElementById("turn2").style.background = player2.color;
   }
-  document.write('</table>');
-
-  /*for (var i = 0; i < k_id; i++) {
-    var currentCell = document.getElementById(i);
-    currentCell.onclick = function(){klick(i);};
-  }*/
-  var cells = document.getElementsByTagName("td");
-  for (var i = 0; i < cells.length; i++) {
-    /*for(w = 0; w < 3; w++)
-      for (x = 1; x <= 3; x++) {
-        x_id = 3*w+x;
-        for (y = 0; y < 3; y++) {
-          for (z = 1; z <= 3; z++) {
-            var index[] = new Array(k_id);
-            for (var v = 1; v <= k_id; v++) {
-              index [v] =
-              //c_id = 10*x_id+3*y+z;
-            }
-           }
-        }
-      }*/
-    cells[i].onclick = function(){klick(i);};
+  else {
+    document.getElementById("turn1").style.background = player1.color;
+    document.getElementById("turn2").style.background = "";
   }
 }
 
-function klick(eingabe) {
-console.log(eingabe);
-  /*
-   k_id2 = eingabe%10
-   b_id2 = Math.floor(eingabe/10)
+function klick(id) {
+  currentField = (Math.floor(id / 10));
+  currentBox = (id % 10);
 
-   if(naechstebox == 0)
-      abbruch = 0;
-      else abbruch = 1
+  if (player == 1) {
+    color = player2.color;
+    colorBack = player1.colorBack;
+  }
+  else {
+    color = player1.color;
+    colorBack = player2.colorBack;
+  }
 
-   if(feld[b_id2][k_id2] == 0 && naechstebox == b_id2*abbruch){
+  if (first) {
+    field[currentField][currentBox] = player;
+    document.getElementById(id).style.background = color;
+    player = ((player + 1) % 2);
+    nextField = currentBox;
+    document.getElementById(nextField).style.background = colorBack;
 
-      feld[b_id2][k_id2] = naechster;
-      naechstebox = k_id2;
-      document.getElementById(b_id2).style = "border-color:undefined";
-      document.getElementById(b_id3).style = "border-color:undefined";
-      bgcakt(b_id2);
-      bgcakt(b_id3);
-      b_id3 = k_id2;
-//die ständigen Farb-wiederherstellungen sind nötig, weil sich Hintergrundfarbe und Randfarbe gegenseitig überschreiben
-      if(naechster == 1){
-         document.getElementById(eingabe).style = "background-color:" + spieler1;
-         boxsieg(1,b_id2);
-         document.getElementById(k_id2).style = "border-color:" + spieler2;
-         naechster = 2;
-         spielsieg(1);
+    if (player == 1) {
+      document.getElementById("turn1").style.background = "";
+      document.getElementById("turn2").style.background = player2.color;
+    }
+    else {
+      document.getElementById("turn1").style.background = player1.color;
+      document.getElementById("turn2").style.background = "";
+    }
+
+    first = 0;
+  }
+  else {
+    if (check()) {
+      count++;
+      field[currentField][currentBox] = player;
+      document.getElementById(id).style.background = color;
+
+      if (player == 1) {
+        document.getElementById("turn1").style.background = player1.color;
+        document.getElementById("turn2").style.background = "";
       }
-      else{
-         document.getElementById(eingabe).style = "background-color:" + spieler2;
-         boxsieg(2,b_id2);
-         document.getElementById(k_id2).style = "border-color:" + spieler1;
-         naechster = 1;
-         spielsieg(2);
+      else {
+        document.getElementById("turn1").style.background = "";
+        document.getElementById("turn2").style.background = player2.color;
       }
-      if(feldvoll(k_id2) == 1)
-         naechstebox = 0;
-   }*/
-}
 
-function neu(){
-   for(a=1; a<=9; a++){
-      document.getElementById(a).style = "background-color:undefined";
-      document.getElementById(a).style = "border-color:undefined";
-      feld[a][0] = 0;
-      for(b=1; b<=9; b++){
-         feld[a][b] = 0;
-         document.getElementById(10*a+b).style = "background-color:undefined";
+      if (fieldWon()) {
+        document.getElementById("field" + currentField).style.background = color;
+        if (gameWon()) {
+          gameOver();
+          return 0;
+        }
       }
-   }
-   if(erster == 1)
-      erster = 2
-      else
-         erster = 1
-   naechster = erster;
-   naechstebox = 0;
-   b_id3 = 1;
-}
 
-function feldvoll(f){
-   ergebnis = 1
-   for(a=1; a<=9; a++)
-      if(feld[f][a] == 0)
-         ergebnis = 0
-   return ergebnis
-}
+      player = ((player + 1) % 2);
+      nextField = currentBox;
+      document.getElementById(currentField).style.background = "#4f5b66";
+      document.getElementById(nextField).style.background = colorBack;
 
-function boxx(box2,s,a,b,c){
-   if(feld[box2][a]==s&&feld[box2][b]==s&&feld[box2][c]==s)
-      return s
-}
-
-function boxsieg(bs,box){
-   if(feld[box][0]==0 && (boxx(box,bs,1,2,3)==bs||boxx(box,bs,4,5,6)==bs||boxx(box,bs,7,8,9)==bs||boxx(box,bs,1,4,7)==bs||boxx(box,bs,2,5,8)==bs||boxx(box,bs,3,6,9)==bs||boxx(box,bs,1,5,9)==bs||boxx(box,bs,3,5,7)==bs)){
-      feld[box][0] = bs;
-      if(bs == 1){
-         document.getElementById(box).style = "background-color:" + spieler1colF;
+      if (count >= 81 && !gameWon()) {
+        tie();
       }
-      else{
-         document.getElementById(box).style = "background-color:" + spieler2colF;
+    }
+  }
+}
+
+function check() {
+  if (currentField == nextField) {
+    if (field[currentField][currentBox] === "x") {
+      return true;
+    }
+  }
+  else {
+    return false;
+  }
+}
+
+function fieldWon() {
+  switch (currentBox) {
+    case 1:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][1] == field[currentField][2] && field[currentField][2] == field[currentField][3] && field[currentField][1] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][1] == field[currentField][5] && field[currentField][5] == field[currentField][6] && field[currentField][1] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][1] == field[currentField][4] && field[currentField][4] == field[currentField][7] && field[currentField][1] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
       }
-   }
-}
-
-function spiell(s,a,b,c){
-   if(feld[a][0]==s&&feld[b][0]==s&&feld[c][0]==s)
-      return s
-}
-
-function spielsieg(ss){
-      if(spiell(ss,1,2,3)==ss||spiell(ss,4,5,6)==ss||spiell(ss,7,8,9)==ss||spiell(ss,1,4,7)==ss||spiell(ss,2,5,8)==ss||spiell(ss,3,6,9)==ss||spiell(ss,1,5,9)==ss||spiell(ss,3,5,7)==ss){
-         if(ss == 1){
-            document.getElementById(0).style = "border-color:" + spieler1;
-            siegespieler1 = siegespieler1 + 1;
-            document.getElementById("links").firstChild.nodeValue = spieler1name + ": " + siegespieler1;
-         }
-         else{
-            document.getElementById(0).style = "border-color:" + spieler2;
-            siegespieler2 = siegespieler2 + 1;
-            document.getElementById("rechts").firstChild.nodeValue = spieler2name + ": " + siegespieler2;
-         }
-         neu()
+      else {
+        return false;
       }
+      break;
+    case 2:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][2] == field[currentField][1] && field[currentField][1] == field[currentField][3] && field[currentField][2] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][2] == field[currentField][5] && field[currentField][5] == field[currentField][8] && field[currentField][2] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 3:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][3] == field[currentField][1] && field[currentField][1] == field[currentField][2] && field[currentField][3] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][3] == field[currentField][5] && field[currentField][5] == field[currentField][7] && field[currentField][3] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][3] == field[currentField][6] && field[currentField][6] == field[currentField][9] && field[currentField][3] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 4:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][4] == field[currentField][1] && field[currentField][1] == field[currentField][7] && field[currentField][4] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][4] == field[currentField][5] && field[currentField][5] == field[currentField][6] && field[currentField][4] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 5:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][5] == field[currentField][1] && field[currentField][1] == field[currentField][3] && field[currentField][5] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][5] == field[currentField][3] && field[currentField][3] == field[currentField][7] && field[currentField][5] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 6:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][6] == field[currentField][3] && field[currentField][3] == field[currentField][9] && field[currentField][6] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][6] == field[currentField][4] && field[currentField][4] == field[currentField][5] && field[currentField][6] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 7:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][7] == field[currentField][3] && field[currentField][3] == field[currentField][5] && field[currentField][7] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][7] == field[currentField][1] && field[currentField][1] == field[currentField][4] && field[currentField][7] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][7] == field[currentField][8] && field[currentField][8] == field[currentField][9] && field[currentField][7] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 8:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][8] == field[currentField][7] && field[currentField][7] == field[currentField][9] && field[currentField][8] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][8] == field[currentField][2] && field[currentField][2] == field[currentField][5] && field[currentField][8] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 9:
+      if (wonFields[currentField] === "x") {
+        if (field[currentField][9] == field[currentField][1] && field[currentField][1] == field[currentField][5] && field[currentField][9] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][9] == field[currentField][3] && field[currentField][3] == field[currentField][6] && field[currentField][9] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (field[currentField][9] == field[currentField][7] && field[currentField][7] == field[currentField][8] && field[currentField][9] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+  }
 }
 
-function feldvoll(f){
-   ergebnis = 1
-   for(a=1; a<=9; a++){
-      if(feld[f][a] == 0)
-         ergebnis = 0
-   }
-   return ergebnis
+function gameWon() {
+  switch (currentBox){
+    case 1:
+      if (wonFields == "x") {
+        if (wonFields[1] == wonFields[2] && wonFields[2] == wonFields[3] && wonFields[1] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[1] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[1] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[1] == wonFields[4] && wonFields[4] == wonFields[7] && wonFields[1] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 2:
+      if (wonFields == "x") {
+        if (wonFields[2] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[2] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[2] == wonFields[5] && wonFields[5] == wonFields[8] && wonFields[2] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 3:
+      if (wonFields == "x") {
+        if (wonFields[3] == wonFields[1] && wonFields[1] == wonFields[2] && wonFields[3] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[3] == wonFields[5] && wonFields[5] == wonFields[7] && wonFields[3] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[3] == wonFields[6] && wonFields[6] == wonFields[9] && wonFields[3] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 4:
+      if (wonFields == "x") {
+        if (wonFields[4] == wonFields[1] && wonFields[1] == wonFields[7] && wonFields[4] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[4] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[4] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 5:
+      if (wonFields == "x") {
+        if (wonFields[5] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[5] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[5] == wonFields[3] && wonFields[3] == wonFields[7] && wonFields[5] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 6:
+      if (wonFields == "x") {
+        if (wonFields[6] == wonFields[3] && wonFields[3] == wonFields[9] && wonFields[6] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[6] == wonFields[4] && wonFields[4] == wonFields[5] && wonFields[6] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 7:
+      if (wonFields == "x") {
+        if (wonFields[7] == wonFields[3] && wonFields[3] == wonFields[5] && wonFields[7] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[7] == wonFields[1] && wonFields[1] == wonFields[4] && wonFields[7] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[7] == wonFields[8] && wonFields[8] == wonFields[9] && wonFields[7] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 8:
+      if (wonFields == "x") {
+        if (wonFields[8] == wonFields[7] && wonFields[7] == wonFields[9] && wonFields[8] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[8] == wonFields[2] && wonFields[2] == wonFields[5] && wonFields[8] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+    case 9:
+      if (wonFields == "x") {
+        if (wonFields[9] == wonFields[1] && wonFields[1] == wonFields[5] && wonFields[9] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[9] == wonFields[3] && wonFields[3] == wonFields[6] && wonFields[9] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else if (wonFields[9] == wonFields[7] && wonFields[7] == wonFields[8] && wonFields[9] != "x") {
+          wonFields[currentField] = player;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      break;
+  }
+
 }
 
-function bgcakt(box3){
-   if(feld[box3][0] == 1)
-      document.getElementById(box3).style = "background-color:" + spieler1colF;
-   if(feld[box3][0] == 2)
-      document.getElementById(box3).style = "background-color:" + spieler2colF;
+function tie() {
+  document.getElementById("winner").innerHTML = "Unentschieden!";
 }
 
+function gameOver() {
+  if (player === 0) {
+    winner = player1.name;
+    document.body.style.background = player1.color;
+  }
+  else {
+    winner = player2.name;
+    document.body.style.background = player2.color;
+  }
+  generateLeaderboard();
+  document.getElementById("winner").innerHTML = winner + " hat gewonnen!";
+  document.getElementById("drawingArea").className = "invisible";
+  document.getElementById("turn").className = "invisible";
+  document.getElementById("gameOver").className = "";
+  document.getElementById("leaderboard").className = "";
 }
-window.onload = main;
 
-/* notes
-* remove "window.onload = main";
-*/
+function generateLeaderboard() {
+  updateLeaderboard(player1.name);
+  updateLeaderboard(player2.name);
+  leaderboard.sort(sortLeaderboard);
+  renderLeaderboard();
+}
+
+function sortLeaderboard(a, b) {
+  var diff = (b[1] / b[2]) - (a[1] / a[2]);
+  if (diff === 0) {
+    return b[2] - a[2];
+  }
+  else {
+    return diff;
+  }
+}
+
+function updatePlayer(playerEnd, i) {
+  if (winner == playerEnd) {
+    leaderboard[i][1]++;
+  }
+  leaderboard[i][2]++;
+}
+
+function insertNewPlayer(playerEnd) {
+  playerTemp = new Array(3);
+  playerTemp[0] = playerEnd;
+  if (winner == playerEnd) {
+    playerTemp[1] = 1;
+  }
+  else {
+    playerTemp[1] = 0;
+  }
+  playerTemp[2] = 1;
+
+  leaderboard.push(playerTemp);
+  newPlayer = false;
+}
+
+function updateLeaderboard(playerEnd) {
+  if (leaderboard.length >= 2) {
+    for (var i = 0; i < leaderboard.length; i++) {
+      if (playerEnd == leaderboard[i][0]) {
+        updatePlayer(playerEnd, i);
+        newPlayer = false;
+        break;
+      }
+      else {
+        newPlayer = true;
+      }
+    }
+  }
+  else {
+    newPlayer = true;
+  }
+  if (newPlayer) {
+    insertNewPlayer(playerEnd);
+  }
+}
+
+function renderLeaderboard() {
+  table = document.getElementById("leaderboardTable");
+  numberOfRows = table.children[0].children.length;
+
+  if (numberOfRows > 1) {
+    for (var k = 1; k < numberOfRows; k++) {
+      table.deleteRow(1);
+    }
+  }
+  for (var j = 0; j < leaderboard.length; j++) {
+    row = table.insertRow(j+1);
+    placeCell = row.insertCell(0);
+    nameCell = row.insertCell(1);
+    wonCell = row.insertCell(2);
+    playedCell = row.insertCell(3);
+
+    placeCell.innerHTML = j+1 + ".";
+    nameCell.innerHTML = leaderboard[j][0];
+    wonCell.innerHTML = leaderboard[j][1];
+    playedCell.innerHTML = leaderboard[j][2];
+  }
+}
+
+function newGame() {
+  for(a = 1; a <= 9; a++){
+     for(b = 1; b <= 9; b++){
+       document.getElementById(10 * a + b).style.background = "#c0c5ce";
+      }
+  }
+  document.body.style.background = "#4f5b66";
+
+  document.getElementById("gameOver").className = "invisible";
+  document.getElementById("leaderboard").className = "invisible";
+  document.getElementById("startTable").className = "";
+}
+
+window.onload = init();
