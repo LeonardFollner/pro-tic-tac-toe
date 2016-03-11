@@ -43,7 +43,7 @@ input {
   line-height: 42px;
 }
 
-.buttonRound {
+.buttonSimple {
   width: 120px;
   height: 42px;
   margin: 20px;
@@ -51,7 +51,7 @@ input {
   border: 1px solid #2b303b;
 }
 
-.buttonRound:hover {
+.buttonSimple:hover {
   background-color: #c0c5ce;
 }
 

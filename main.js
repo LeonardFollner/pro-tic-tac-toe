@@ -311,160 +311,132 @@ function fieldWon() {
 }
 
 function gameWon() {
-  switch (currentBox){
+  switch (currentField){
     case 1:
-      if (wonFields == "x") {
-        if (wonFields[1] == wonFields[2] && wonFields[2] == wonFields[3] && wonFields[1] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[1] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[1] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[1] == wonFields[4] && wonFields[4] == wonFields[7] && wonFields[1] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[1] == wonFields[2] && wonFields[2] == wonFields[3] && wonFields[1] != "x") {
+        return true;
+      }
+      else if (wonFields[1] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[1] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else if (wonFields[1] == wonFields[4] && wonFields[4] == wonFields[7] && wonFields[1] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 2:
-      if (wonFields == "x") {
-        if (wonFields[2] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[2] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[2] == wonFields[5] && wonFields[5] == wonFields[8] && wonFields[2] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[2] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[2] != "x") {
+        return true;
+      }
+      else if (wonFields[2] == wonFields[5] && wonFields[5] == wonFields[8] && wonFields[2] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 3:
-      if (wonFields == "x") {
-        if (wonFields[3] == wonFields[1] && wonFields[1] == wonFields[2] && wonFields[3] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[3] == wonFields[5] && wonFields[5] == wonFields[7] && wonFields[3] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[3] == wonFields[6] && wonFields[6] == wonFields[9] && wonFields[3] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[3] == wonFields[1] && wonFields[1] == wonFields[2] && wonFields[3] != "x") {
+        return true;
+      }
+      else if (wonFields[3] == wonFields[5] && wonFields[5] == wonFields[7] && wonFields[3] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else if (wonFields[3] == wonFields[6] && wonFields[6] == wonFields[9] && wonFields[3] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 4:
-      if (wonFields == "x") {
-        if (wonFields[4] == wonFields[1] && wonFields[1] == wonFields[7] && wonFields[4] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[4] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[4] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[4] == wonFields[1] && wonFields[1] == wonFields[7] && wonFields[4] != "x") {
+        return true;
+      }
+      else if (wonFields[4] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[4] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 5:
-      if (wonFields == "x") {
-        if (wonFields[5] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[5] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[5] == wonFields[3] && wonFields[3] == wonFields[7] && wonFields[5] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[5] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[5] != "x") {
+        return true;
+      }
+      else if (wonFields[5] == wonFields[3] && wonFields[3] == wonFields[7] && wonFields[5] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 6:
-      if (wonFields == "x") {
-        if (wonFields[6] == wonFields[3] && wonFields[3] == wonFields[9] && wonFields[6] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[6] == wonFields[4] && wonFields[4] == wonFields[5] && wonFields[6] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[6] == wonFields[3] && wonFields[3] == wonFields[9] && wonFields[6] != "x") {
+        return true;
+      }
+      else if (wonFields[6] == wonFields[4] && wonFields[4] == wonFields[5] && wonFields[6] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 7:
-      if (wonFields == "x") {
-        if (wonFields[7] == wonFields[3] && wonFields[3] == wonFields[5] && wonFields[7] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[7] == wonFields[1] && wonFields[1] == wonFields[4] && wonFields[7] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[7] == wonFields[8] && wonFields[8] == wonFields[9] && wonFields[7] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[7] == wonFields[3] && wonFields[3] == wonFields[5] && wonFields[7] != "x") {
+        return true;
+      }
+      else if (wonFields[7] == wonFields[1] && wonFields[1] == wonFields[4] && wonFields[7] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else if (wonFields[7] == wonFields[8] && wonFields[8] == wonFields[9] && wonFields[7] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 8:
-      if (wonFields == "x") {
-        if (wonFields[8] == wonFields[7] && wonFields[7] == wonFields[9] && wonFields[8] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[8] == wonFields[2] && wonFields[2] == wonFields[5] && wonFields[8] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[8] == wonFields[7] && wonFields[7] == wonFields[9] && wonFields[8] != "x") {
+        return true;
+      }
+      else if (wonFields[8] == wonFields[2] && wonFields[2] == wonFields[5] && wonFields[8] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
     case 9:
-      if (wonFields == "x") {
-        if (wonFields[9] == wonFields[1] && wonFields[1] == wonFields[5] && wonFields[9] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[9] == wonFields[3] && wonFields[3] == wonFields[6] && wonFields[9] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else if (wonFields[9] == wonFields[7] && wonFields[7] == wonFields[8] && wonFields[9] != "x") {
-          wonFields[currentField] = player;
-          return true;
-        }
-        else{
-          return false;
-        }
+      if (wonFields[9] == wonFields[1] && wonFields[1] == wonFields[5] && wonFields[9] != "x") {
+        return true;
+      }
+      else if (wonFields[9] == wonFields[3] && wonFields[3] == wonFields[6] && wonFields[9] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else if (wonFields[9] == wonFields[7] && wonFields[7] == wonFields[8] && wonFields[9] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else{
+        return false;
       }
       break;
   }
-
 }
 
 function tie() {
@@ -472,6 +444,7 @@ function tie() {
 }
 
 function gameOver() {
+  console.log("hex");
   if (player === 0) {
     winner = player1.name;
     document.body.style.background = player1.color;
@@ -579,6 +552,7 @@ function newGame() {
   }
   document.body.style.background = "#4f5b66";
 
+  document.getElementById("menu").className = "invisible";
   document.getElementById("gameOver").className = "invisible";
   document.getElementById("leaderboard").className = "invisible";
   document.getElementById("startTable").className = "";
