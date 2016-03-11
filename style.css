@@ -71,6 +71,10 @@ input {
   text-align: center;
 }
 
+.rightText {
+  text-align: right;
+}
+
 .center {
   margin-left: auto;
   margin-right: auto;
@@ -81,7 +85,9 @@ input {
 }
 
 .leaderboard th {
-  border:1px solid #2b303b;
+  border: 1px solid #2b303b;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 .leaderboard tr:nth-child(even) {

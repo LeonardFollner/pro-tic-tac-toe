@@ -444,7 +444,6 @@ function tie() {
 }
 
 function gameOver() {
-  console.log("hex");
   if (player === 0) {
     winner = player1.name;
     document.body.style.background = player1.color;
@@ -541,6 +540,9 @@ function renderLeaderboard() {
     nameCell.innerHTML = leaderboard[j][0];
     wonCell.innerHTML = leaderboard[j][1];
     playedCell.innerHTML = leaderboard[j][2];
+
+    wonCell.className = "rightText";
+    playedCell.className = "rightText";
   }
 }
 
