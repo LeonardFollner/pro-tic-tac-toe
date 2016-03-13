@@ -15,17 +15,30 @@
 
       <div id = "menu">
         <p class = "pointer buttonSimple center" onclick = "startGame()">Neues Spiel</p>
+        <p class = "pointer buttonSimple center invisible" id ="continueButton" onclick = "continueGame()">Spiel fortsetzen</p>
         <p class = "pointer buttonSimple center" onclick = "toggle('leaderboard')">Bestenliste</p>
       </div>
 
+      <div id = "confirm" class = "invisible">
+        <p>Bist du dir sicher, dass du das laufende Spiel l&ouml;schen willst?</p><br>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetGame', 1)">Ja</p>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetGame', 0)">Nein</p>
+      </div>
+
+      <div id = "confirmResetLeaderboard" class = "invisible">
+        <p>Bist du dir sicher, dass du die Bestenliste l&ouml;schen willst?</p><br>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetLeaderboard', 1)">Ja</p>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetLeaderboard', 0)">Nein</p>
+      </div>
+
       <div id = "startTable" class = "invisible">
+        <p class = "hint underline" onclick = "showMenu()">zum Menu</p>
         <table id="data" align="center" cellspacing="2" cellpadding="2" border="0">
           <tr>
             <th>Spielername:</th>
             <td><form name="info1" onsubmit="return false"><input type="text" name="player1Name" id="spieler1Name" value="Spieler1"></form></td>
             <td><form name="info2" onsubmit="return false"><input type="text" name="player2Name" id="spieler2Name" value="Spieler2"></form></td>
-            <td></td>
-            <td><input type="button" value="Start" onclick="main()"></td>
+            <td><input type="button" value="Start" onclick="draw()"></td>
           </tr>
           <tr>
             <th>K&auml;stchenfarbe:</th>
@@ -37,7 +50,7 @@
             <th>Feldfarbe:</th>
             <td><input type="color" id="spieler1colF" value="#cc7a7c"></td>
             <td><input type="color" id="spieler2colF" value="#7ab1cc"></td>
-            <td></td>
+            <td><input type="button" value="Reset" onclick="reset()"></td>
           </tr>
           <tr>
             <td></td>
@@ -230,17 +243,20 @@
       </div>
 
       <div id = "turn" class ="invisible">
-        <p class = "inline-block">N&auml;chster Zug:</p>
+        <p class = "inline-block">Am Zug:</p>
         <p id="turn1" class = "button inline-block"></p>
         <p id="turn2" class = "button inline-block"></p>
       </div>
 
       <div id = "gameOver" class="invisible">
         <p id = "winner"></p>
-        <form><input type="button" value="Spiel zeigen" onclick="toggle('drawingArea')"></form>
+        <button type="button" class="buttonSimple center pointer" onclick="toggle('drawingArea')">Spiel zeigen</button>
+        <button type="button" class ="buttonSimple center pointer" onclick="showMenu()">Menu</button>
+        <button type="button" class ="buttonSimple center pointer" onclick="newGame()">Neues Spiel</button>
       </div>
 
       <div id = "leaderboard" class="invisible">
+        <p class = "hint underline" onclick = "startReset()">zur&uuml;cksetzen</p>
         <table id = "leaderboardTable" class = "leaderboard center">
           <tr>
             <td></td>
@@ -252,7 +268,7 @@
             <td colspan="4">Es sind noch keine Eintr&auml;ge vorhanden</td>
           </tr>
         </table>
-        <form><input type="button" value="Neues Spiel" onclick="newGame()"></form>
+        <button type="button" class ="pointer buttonSimple" onclick="showMenu()">Menu</button>
       </div>
 
     </div>

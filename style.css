@@ -44,11 +44,13 @@ input {
 }
 
 .buttonSimple {
-  width: 120px;
+  width: 140px;
   height: 42px;
   margin: 20px;
   line-height: 42px;
   border: 1px solid #2b303b;
+  background-color: #4f5b66;
+  color: #eff1f5;
 }
 
 .buttonSimple:hover {
@@ -57,10 +59,6 @@ input {
 
 .invisible {
   display: none;
-}
-
-.inline {
-  display: inline;
 }
 
 .inline-block {
@@ -82,6 +80,12 @@ input {
 
 .hint {
   color: #c0c5ce;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+.underline:hover {
+  text-decoration: underline;
 }
 
 .leaderboard th {
