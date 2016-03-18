@@ -1,3 +1,4 @@
+//variabledeclaration
 var drawingArea;
 var player, nextField, currentField, currentBox, color;
 var field, wonFields, leaderboard;
@@ -9,134 +10,78 @@ var newPlayer;
 var table, numberOfRows, row;
 var fieldCookie, leaderboardCookie, wonFieldsCookie, allCookies;
 
-function checkGameRunning() {
+/* ----------------------------------------------------------------------------
+  Vor allem anderen, laden der Variablen, Darstellung, ...
+  ----------------------------------------------------------------------------*/
+
+function main() {                                                               //wird nach Laden der Seite ausgeführt
+  checkGameRunning();
+  init();
+  renderLeaderboard();
+}
+
+function checkGameRunning() {                                                   //kontrolliert, ob in den Cookies ein laufendes Spiel gespeichert ist
   if (getCookie("gameRunning") == 1) {
-    document.getElementById("continueButton").className = "pointer buttonSimple center";
+    document.getElementById("continueButton").className = "pointer buttonSimple center";            //zeigt Button zum Fortsetzen an
   }
   else {
-    document.getElementById("continueButton").className = "pointer buttonSimple center invisible";
+    document.getElementById("continueButton").className = "pointer buttonSimple center invisible";  //blendet Button zum Fortsetzen aus
   }
 }
 
-function startGame() {
-  if (getCookie("gameRunning") === "1") {
-    document.getElementById("confirm").className = "";
-    document.getElementById("menu").className = "invisible";
-    document.getElementById("leaderboard").className = "invisible";
-  }
-  else {
-    for(a = 1; a <= 9; a++){
-      document.getElementById(a).style.background = "#4f5b66";
-      for(b = 1; b <= 9; b++){
-        document.getElementById(a * 10 + b).style.background = "#c0c5ce";
-      }
-    }
-    for(c = 1; c <= 9; c++) {
-      document.getElementById("field" + c).style.background = "#4f5b66";
-    }
-    document.getElementById("confirm").className = "invisible";
-    document.getElementById("menu").className = "invisible";
-    document.getElementById("leaderboard").className = "invisible";
-    document.getElementById("startTable").className = "";
-  }
-}
-
-function startReset() {
-  document.getElementById("confirmResetLeaderboard").className = "";
-  document.getElementById("leaderboard").className = "invisible";
-  document.getElementById("gameOver").className = "invisible";
-}
-
-function confirm(what, status) {
-  if (what == "resetGame") {
-    if (status) {
-     resetGame();
-     for(a = 1; a <= 9; a++){
-       document.getElementById(a).style.background = "#4f5b66";
-       for(b = 1; b <= 9; b++){
-         document.getElementById(a * 10 + b).style.background = "#c0c5ce";
-       }
-     }
-     for(c = 1; c <= 9; c++) {
-       document.getElementById("field" + c).style.background = "#4f5b66";
-     }
-     document.getElementById("confirm").className = "invisible";
-     document.getElementById("menu").className = "invisible";
-     document.getElementById("leaderboard").className = "invisible";
-     document.getElementById("startTable").className = "";
-   }
-   else {
-     document.getElementById("confirm").className = "invisible";
-     document.getElementById("menu").className = "";
-   }
-  }
-  else if (what == "resetLeaderboard") {
-    if (status == 1) {
-      resetLeaderboard();
-    }
-    document.getElementById("confirmResetLeaderboard").className = "invisible";
-    document.getElementById("leaderboard").className = "";
-  }
-}
-
-function continueGame(){
-  document.getElementById("menu").className = "invisible";
-  document.getElementById("leaderboard").className = "invisible";
-  draw();
-  saveCookies(1);
-}
-
-function init() {
-  if (getCookie("firstGame") === "") {
-    player1 = {
-      name:"Spieler1",
-      color:"#ab4143",
-      colorBack:"#cc7a7c"
+function init() {                                                               //erstellt oder lädt Variablen
+  if (getCookie("firstGame") === "") {                                          //nur beim aller ersten Laden der Seite werden alle Variablen neu angelegt
+    player1 = {                                                                 //Objekt für Spieler 1
+      name:"Spieler1",                                                          //mit Name,
+      color:"#ab4143",                                                          //HighlightFarbe,
+      colorBack:"#cc7a7c"                                                       //und Hintergrundfarbe
     };
-    player2 = {
+    player2 = {                                                                 //Das gleiche für Spieler 2
       name:"Spieler2",
       color:"#448eb3",
       colorBack:"#7ab1cc"
     };
 
-    player = (Math.ceil(Math.random()*2)-1);
+    player = (Math.ceil(Math.random()*2)-1);                                    //zufällig einen ersten Spieler wählen (0 steht für Spieler 1; 1 steht für Spieler 2)
 
-    field = new Array(10);
+    field = new Array(10);                                                      //neu Anlegen eines Arrays in dem das Spiel gespeichert wird
     for(a = 1; a <= 9; a++){
-       field[a] = new Array(10);
+       field[a] = new Array(10);                                                //neu Anlegen von Arrays zum Speichern der kleinen Kästchen
        for(b = 1; b <= 9; b++){
-          field[a][b] = "x";
+          field[a][b] = "x";                                                    //Kästchen keinem Spieler zuweisen
         }
     }
 
-    wonFields = new Array(10);
+    wonFields = new Array(10);                                                  //neu Anlegen eines Arrays zum Speichern der gewonnenen großen Kästchen
     for(c = 1; c <= 9; c++) {
-      wonFields[c] = "x";
+      wonFields[c] = "x";                                                       //große Kästchen keinem Spieler zuweisen
     }
-
-    leaderboard = [];
-    first = 1;
-    last = 0;
-    count = 1;
+                                                                                //Anlegen neuer Spielvariablen für:
+    leaderboard = [];                                                           //Bestenliste
+    first = 1;                                                                  //ersten Spielzug
+    last = 0;                                                                   //letzten Spielzug
+    count = 1;                                                                  //Zahl der bereits ausgefüllten Kästchen
+    wonFieldsPlayer1 = 0;                                                       //Zahl der gewonnen Felder für Spieler 1
+    wonFieldsPlayer2 = 0;                                                       //Zahl der gewonnen Felder für Spieler 2
   }
-  else {
-    loadVariables();
+  else {                                                                        //wenn es nicht der erste Aufruf der Seite ist
+    loadVariables();                                                            //Variablen aus dem Speicher laden
   }
 }
 
-function loadVariables() {
-  player1 = {
+function loadVariables() {                                                      //lädt bestehende Variablen
+  player1 = {                                                                   //Anlegen von leeren Objekten für Spieler 1
     name:"",
     color:"",
     colorBack:"",
   };
-  player2 = {
+  player2 = {                                                                   //und Spieler 2
     name:"",
     color:"",
     colorBack:"",
   };
 
-  player1.name = getCookie("player1.name");
+  player1.name = getCookie("player1.name");                                     //Auslesen der Cookies und Speichern in den jeweiligen Objekteigenschaften
   player1.color = getCookie("player1.color");
   player1.colorBack = getCookie("player1.colorBack");
 
@@ -144,7 +89,7 @@ function loadVariables() {
   player2.color = getCookie("player2.color");
   player2.colorBack = getCookie("player2.colorBack");
 
-  document.info1.player1Name.value = player1.name;
+  document.info1.player1Name.value = player1.name;                              //Formularfelder auf die gespeicherten Werte setzen
   document.getElementById("spieler1colK").value = player1.color;
   document.getElementById("spieler1colF").value = player1.colorBack;
 
@@ -152,14 +97,14 @@ function loadVariables() {
   document.getElementById("spieler2colK").value = player2.color;
   document.getElementById("spieler2colF").value = player2.colorBack;
 
-  if (getCookie("gameRunning") == 1){
-    getField();
-    getWonFields();
-    player = getCookie("player");
-    count = getCookie("count");
-    last = getCookie("lastTurn");
-    nextField = getCookie("nextField");
-    if (player === "0") {
+  if (getCookie("gameRunning") == 1){                                           //wenn ein Spiel unterbrochen und gespeichert wurde
+    getField();                                                                 //Laden des Feldes
+    getWonFields();                                                             //Laden der gewonnenen Felder
+    player = getCookie("player");                                               //Laden, welcher Spieler am Zug ist
+    count = getCookie("count");                                                 //Anzahl ausgefüllter Kästchen laden
+    last = getCookie("lastTurn");                                               //Laden, ob es der letzte Zug ist
+    nextField = getCookie("nextField");                                         //Laden, wo als nächstes gesetzt werden muss
+    if (player === "0") {                                                       //Färben des nächsten Feldes entsprechend des Spielers
       document.getElementById(nextField).style.background = player1.colorBack;
     }
     else {
@@ -168,8 +113,8 @@ function loadVariables() {
       }
     }
   }
-  else {
-    field = new Array(10);
+  else {                                                                        //wenn kein laufendes Spiel gespeichert wurde
+    field = new Array(10);                                                      //Anlegen der Variablen wie beim ersten Mal (siehe function init())
     for(a = 1; a <= 9; a++){
        field[a] = new Array(10);
        for(b = 1; b <= 9; b++){
@@ -187,84 +132,23 @@ function loadVariables() {
     first = 1;
     last = 0;
   }
-  getLeaderboard();
+  wonFieldsPlayer1 = 0;                                                         //Zahl der gewonnen Felder für Spieler 1 zurück setzen
+  wonFieldsPlayer2 = 0;                                                         //Zahl der gewonnen Felder für Spieler 2 zurück setzen
+  getLeaderboard();                                                             //unabhängig davon, ob ein Spiel gespeichert wurde muss die Bestenliste geladen werden
 }
 
-function getField() {
-  fieldCookie = getCookie("field").split(",");
-  field = new Array(10);
-  for (a = 1; a <= 9; a++){
-    field[a] = new Array(10);
-    for(b = 1; b <= 9; b++){
-      field[a][b] = fieldCookie[(a-1) * 10 + (b+1)];
-      if (field[a][b] != "x") {
-        if (field[a][b] === "0") {
-          document.getElementById(a * 10 + b).style.background = player1.color;
-        }
-        else {
-          if (field[a][b] == 1) {
-            document.getElementById(a * 10 + b).style.background = player2.color;
-          }
-        }
-      }
-      else {
-        document.getElementById(a * 10 + b).style.background = "#c0c5ce";
-      }
-    }
-  }
-}
+/* ----------------------------------------------------------------------------
+  Display
+  ----------------------------------------------------------------------------*/
 
-function getLeaderboard() {
-  leaderboardCookie = getCookie("leaderboard").split(",");
-  if (leaderboardCookie.length === 1) {
-    leaderboard = [];
-  }
-  else {
-    leaderboard = new Array(leaderboardCookie.length / 3);
-    for (a = 0; a < leaderboardCookie.length / 3; a++) {
-      leaderboard[a] = new Array(3);
-      for (b = 0; b < 3; b++) {
-        leaderboard[a][b] = leaderboardCookie[(a * 3) + b];
-      }
-    }
-  }
-}
-
-function getWonFields() {
-  wonFieldsCookie = getCookie("wonFields").split(",");
-  wonFields = new Array(10);
-  for(c = 1; c <= 9; c++) {
-    wonFields[c] = wonFieldsCookie[c];
-    if (wonFields[c] === "0") {
-      document.getElementById("field" + c).style.background = player1.color;
-    }
-    else {
-      if (wonFields[c] == 1){
-        document.getElementById("field" + c).style.background = player2.color;
-      }
-    }
-  }
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
-    }
-    return "";
-}
-
-function toggle(id) {
-  if (id == "leaderboard") {
+function toggle(id) {                                                           //Aus-/Einblenden eines Elementes
+  if (id == "leaderboard") {                                                    //wenn es sich um die Bestenliste handelt
     if (document.getElementById(id).className === "") {
       document.getElementById(id).className = "invisible";
     }
     else {
       document.getElementById(id).className = "";
-      document.getElementById("menu").className = "invisible";
+      document.getElementById("menu").className = "invisible";                  //muss zusätzlich das Menu ausgeblendet werden
     }
   }
   else {
@@ -277,8 +161,8 @@ function toggle(id) {
   }
 }
 
-function showMenu() {
-  document.getElementById("confirm").className = "invisible";
+function showMenu() {                                                           //Einblenden des Menus
+  document.getElementById("confirm").className = "invisible";                   //Ausblenden aller anderen Teile
   document.getElementById("confirmResetLeaderboard").className = "invisible";
   document.getElementById("startTable").className = "invisible";
   document.getElementById("drawingArea").className = "invisible";
@@ -286,11 +170,38 @@ function showMenu() {
   document.getElementById("gameOver").className = "invisible";
   document.getElementById("leaderboard").className = "invisible";
   document.getElementById("menu").className = "";
-  document.body.style.background = "#4f5b66";
+  document.body.style.background = "#4f5b66";                                   //Zurücksetzen der Hintergrundfarbe
 }
 
-function draw() {
-  player1.name = document.info1.player1Name.value;
+/* ----------------------------------------------------------------------------
+  Spielbeginn
+  ----------------------------------------------------------------------------*/
+
+function startGame() {                                                          //leitet den Start ein
+  if (getCookie("gameRunning") === "1") {                                       //wenn ein Spiel noch läuft
+    document.getElementById("confirm").className = "";                          //einblenden des Bestätigungsdialoges
+    document.getElementById("menu").className = "invisible";                    //ausblenden von allem anderen
+    document.getElementById("leaderboard").className = "invisible";
+  }
+  else {                                                                        //ansonsten
+    for(a = 1; a <= 9; a++){                                                    //Farben der Spielfläche zurücksetzen
+      document.getElementById(a).style.background = "#4f5b66";
+      for(b = 1; b <= 9; b++){
+        document.getElementById(a * 10 + b).style.background = "#c0c5ce";
+      }
+    }
+    for(c = 1; c <= 9; c++) {
+      document.getElementById("field" + c).style.background = "#4f5b66";
+    }
+    document.getElementById("confirm").className = "invisible";                 //alles ausblenden
+    document.getElementById("menu").className = "invisible";
+    document.getElementById("leaderboard").className = "invisible";
+    document.getElementById("startTable").className = "";                       //Eingabefeld einblenden
+  }
+}
+
+function draw() {                                                               //letzte Checks, Anzeigen der Spielfläche
+  player1.name = document.info1.player1Name.value;                              //Abspeichern der Eingaben in Variablen
   player1.color = document.getElementById("spieler1colK").value;
   player1.colorBack = document.getElementById("spieler1colF").value;
 
@@ -298,22 +209,22 @@ function draw() {
   player2.color = document.getElementById("spieler2colK").value;
   player2.colorBack = document.getElementById("spieler2colF").value;
 
-  if (player1.name == player2.name) {
-    alert("Bitte unterschiedliche Namen wählen.");
-    return 0;
+  if (player1.name == player2.name) {                                           //Namen müssen sich unterscheiden
+    alert("Bitte unterschiedliche Namen wählen.");                              //Hinweis
+    return 0;                                                                   //Abbruch
   }
-  if (player1.color == player2.color || player1.color == player1.colorBack || player2.color == player2.colorBack || player1.color == player2.colorBack || player2.color == player1.colorBack) {
-    alert("Bitte unterschiedliche Farben wählen.");
-    return 0;
+  if (player1.color == player2.color || player1.color == player1.colorBack || player2.color == player2.colorBack || player1.color == player2.colorBack || player2.color == player1.colorBack) { //Farben müssen sich unterscheiden
+    alert("Bitte unterschiedliche Farben wählen.");                             //Hinweis
+    return 0;                                                                   //Abbruch
   }
 
-  document.getElementById("startTable").className = "invisible";
-  toggle("drawingArea");
-  document.getElementById("turn").className = "";
-  document.getElementById("turn1").innerHTML = player1.name;
+  document.getElementById("startTable").className = "invisible";                //Ausblenden des Formulars
+  toggle("drawingArea");                                                        //Anzeigen des Spiels
+
+  document.getElementById("turn1").innerHTML = player1.name;                    //Ausfüllen der Namen in die Tabelle, wer am Zug ist
   document.getElementById("turn2").innerHTML = player2.name;
 
-  if (player == 1) {
+  if (player == 1) {                                                            //Spieler, der am Zug ist farblich hinterlegen
     document.getElementById("turn1").style.background = "";
     document.getElementById("turn2").style.background = player2.color;
   }
@@ -321,14 +232,26 @@ function draw() {
     document.getElementById("turn1").style.background = player1.color;
     document.getElementById("turn2").style.background = "";
   }
+  document.getElementById("turn").className = "";                               //Anzeigen der Tabelle wer am Zug ist
 }
 
-function klick(id) {
-    currentField = (Math.floor(id / 10));
-    currentBox = (id % 10);
+function continueGame(){                                                        //Spiel fortsetzen
+  document.getElementById("menu").className = "invisible";                      //Ausblenden aller Bedienelemente
+  document.getElementById("leaderboard").className = "invisible";
+  draw();                                                                       //Spiel einleiten
+  saveCookies(1);                                                               //Spiel als laufend speichern
+}
 
-  if (last == 0 && check()) {
-    if (player == 1) {
+/* ----------------------------------------------------------------------------
+  eigentliche Spielmechanik
+  ----------------------------------------------------------------------------*/
+
+function klick(id) {                                                            //eigentliche Spielmechanik (id übergibt das geklickte Kästchen)
+    currentField = (Math.floor(id / 10));                                       //Speichern des geklickten großen Feldes als eigene Variable
+    currentBox = (id % 10);                                                     //Speichern des geklickten Kästchens im geklickten Feld als eigene Variable
+
+  if (last == 0 && check()) {                                                   //nur wenn der letzte Zug noch nicht gesetzt wurde UND es ein erlaubter Zug ist
+    if (player == 1) {                                                          //Variablen für Farbe und Hintergrundfarbe je nach Spieler festlegen
       color = player2.color;
       colorBack = player1.colorBack;
     }
@@ -337,94 +260,82 @@ function klick(id) {
       colorBack = player2.colorBack;
     }
 
-    if (first || !getCookie("gameRunning")) {
-      field[currentField][currentBox] = player;
-      document.getElementById(id).style.background = color;
-      player = ((player + 1) % 2);
-      nextField = currentBox;
-      document.getElementById(nextField).style.background = colorBack;
-      document.getElementById(currentField).style.background = "#4f5b66";
+    if (first || !getCookie("gameRunning")) {                                   //wenn es der erste Zug ist oder das Spiel noch nicht als laufend gespeichert wurde, 'first' gibt auch an, dass der Zug frei gesetzt werden darf, zB wenn auf ein volles Feld verwiesen wurde
+      field[currentField][currentBox] = player;                                 //speichern, von welchem Spieler das Feld angeklickt wurde
+      document.getElementById(id).style.background = color;                     //Färben des Kästchens
+      player = ((player + 1) % 2);                                              //Ändern der Spielervariable zum nächsten Spieler
+      nextField = currentBox;                                                   //Speichern, wo der nächste Zug hingesetzt werden muss
+      document.getElementById(nextField).style.background = colorBack;          //Färben des nächsten Feldes
+      document.getElementById(currentField).style.background = "#4f5b66";       //Zurücksetzen der Farbe des aktuellen Feldes
 
-      first = 0;
-      document.getElementById("turn").className = "invisible";
+      first = 0;                                                                //first verbieten
+      document.getElementById("turn").className = "invisible";                  //verstecken der Tabelle, wer am Zug ist. Das sollte eindeutig sein
       var d = new Date();
       d.setTime(d.getTime() + (365*10*24*60*60*1000));
       var expires = "expires="+d.toUTCString();
-      document.cookie = "firstGame=false; " + expires;
+      document.cookie = "firstGame=false; " + expires;                          //speichern, dass es nicht mehr das erste Spiel ist
     }
-    else {
-      count++;
-      field[currentField][currentBox] = player;
-      document.getElementById(id).style.background = color;
+    else {                                                                      //wenn der Zug nicht frei gesetzt werden darf
+      count++;                                                                  //Zahl der ausgefüllten Felder erhöhen
+      field[currentField][currentBox] = player;                                 //speichern, von welchem Spieler das Feld angeklickt wurde
+      document.getElementById(id).style.background = color;                     //Färben des Kästchens
 
-      if (fieldWon()) {
-        document.getElementById("field" + currentField).style.background = color;
-        if (gameWon()) {
-          last = 1;
-          gameOver();
-          return 0;
+      if (fieldWon()) {                                                         //wenn mit dem aktuellen Zug das Feld gewonnen wurde
+        document.getElementById("field" + currentField).style.background = color; //Färben des Feldes
+        if (gameWon()) {                                                        //wenn mit dem gewonnenen Feld das Spiel gewonnen wurde
+          last = 1;                                                             //aktivieren, dass der letzte Zug gesetzt wurde
+          gameOver();                                                           //Spielende einleiten
+          return 0;                                                             //Funktionsabbruch
         }
       }
 
-      player = ((player + 1) % 2);
-      nextField = currentBox;
-      document.getElementById(currentField).style.background = "#4f5b66";
-      document.getElementById(nextField).style.background = colorBack;
-      fieldFull(nextField);
-      document.getElementById("turn").className = "invisible";
+      player = ((player + 1) % 2);                                              //Ändern der Spielervariable zum nächsten Spieler
+      nextField = currentBox;                                                   //Speichern, wo der nächste Zug hingesetzt werden muss
+      document.getElementById(currentField).style.background = "#4f5b66";       //Zurücksetzen der Farbe des aktuellen Feldes
+      document.getElementById(nextField).style.background = colorBack;          //Färben des nächsten Feldes
+      fieldFull(nextField);                                                     //kontrollieren, ob das nächste Feld voll ist
+      document.getElementById("turn").className = "invisible";                  //verstecken der Tabelle, wer am Zug ist. Das sollte eindeutig sein
 
-      if (count >= 81 && !gameWon()) {
-        last = 1;
-        tie();
-        gameOver();
-        return 0;
+      if (count >= 81 && !gameWon()) {                                          //wenn alle Kästchen ausgfüllt wurden und das Spiel noch nicht gewonnen wurde
+        last = 1;                                                               //aktivieren, dass der letzte Zug gesetzt wurde
+        tie();                                                                  //Spiel als unentschieden auswerten
+        gameOver();                                                             //Spielende einleiten
+        return 0;                                                               //Funktionsabbruch
       }
     }
-    saveCookies(1);
+    saveCookies(1);                                                             //Spiel als laufend speichern
   }
 }
 
-function check() {
-  if (first) {
-    if (field[currentField][currentBox] === "x") {
-      return true;
+function check() {                                                              //kontrollieren, ob ein Spielzug regelkonform ist
+  if (first) {                                                                  //wenn der Zug frei gesetzt werden darf
+    if (field[currentField][currentBox] === "x") {                              //und das Feld unbesetzt ist
+      return true;                                                              //Zug freigeben
     }
-    else {
-      return false;
-    }
-  }
-  else if (currentField == nextField) {
-    if (field[currentField][currentBox] === "x") {
-      return true;
-    }
-    else {
-      return false;
+    else {                                                                      //wenn Feld bereits besetzt
+      return false;                                                             //Zug blockieren
     }
   }
-}
-
-function fieldFull(nr) {
-  fieldCount = 0;
-  for (var e = 1; e <= 9; e++) {
-    if(field[nr][e] !== "x") {
-      fieldCount++;
+  else if (currentField == nextField) {                                         //wenn Klick im nächsten Feld erfolgt ist
+    if (field[currentField][currentBox] === "x") {                              //kontrollieren, ob das Kästchen unbesetzt ist
+      return true;                                                              //Zug freigeben
+    }
+    else {                                                                      //wenn Feld besetzt ist
+      return false;                                                             //Zug blockieren
     }
   }
-  if (fieldCount == 9) {
-    first = 1;
-    for(a = 1; a <= 9; a++){
-      document.getElementById(a).style.background = "#4f5b66";
-    }
+  else {
+    return false;                                                               //Zug blockieren
   }
 }
 
-function fieldWon() {
-  switch (currentBox) {
-    case 1:
-      if (wonFields[currentField] === "x") {
+function fieldWon() {                                                           //kontrollieren, ob das Feld mit dem aktuellen Klick gewonnen wurde
+  switch (currentBox) {                                                         //kontrolle für das jeweils gerade geklickte kleine Kästchen
+    case 1:                                                                     //es folgen für jedes mögliche geklickte Kästchen alle Möglichkeiten es zu gewinnen
+      if (wonFields[currentField] === "x") {                                    //nur kontrollieren, wenn das Feld noch nicht gewonnen wurde
         if (field[currentField][1] == field[currentField][2] && field[currentField][2] == field[currentField][3] && field[currentField][1] != "x") {
-          wonFields[currentField] = player;
-          return true;
+          wonFields[currentField] = player;                                     //als vom Spieler gewonnen abspeichern
+          return true;                                                          //Gewinn zurück geben
         }
         else if (field[currentField][1] == field[currentField][5] && field[currentField][5] == field[currentField][6] && field[currentField][1] != "x") {
           wonFields[currentField] = player;
@@ -435,11 +346,11 @@ function fieldWon() {
           return true;
         }
         else{
-          return false;
+          return false;                                                         //nicht gewonnen
         }
       }
       else {
-        return false;
+        return false;                                                           //nicht gewonnen
       }
       break;
     case 2:
@@ -585,8 +496,27 @@ function fieldWon() {
   }
 }
 
-function gameWon() {
-  switch (currentField){
+function fieldFull(nr) {                                                        //kontrollieren, ob alle Kästchen im Feld schon besetzt sind
+  fieldCount = 0;                                                               //Zählervariable zurücksetzen
+  for (var e = 1; e <= 9; e++) {                                                //für alle 9 Kästchen
+    if(field[nr][e] !== "x") {                                                  //kontrollieren, ob sie nicht leer sind
+      fieldCount++;                                                             //Zähler erhöhen
+    }
+  }
+  if (fieldCount == 9) {                                                        //wenn alle Kästchen besetzt sind
+    first = 1;                                                                  //freies Setzen erlauben
+    for(a = 1; a <= 9; a++){
+      document.getElementById(a).style.background = "#4f5b66";                  //alle Kästchenfarben zurücksetzen
+    }
+  }
+}
+
+/* ----------------------------------------------------------------------------
+  Spielende
+  ----------------------------------------------------------------------------*/
+
+function gameWon() {                                                            //kontrollieren, ob das Spiel gewonnen wurde
+  switch (currentField){                                                        //eigentlich genau so, wie fieldWon() nur für Felder statt Kästchen
     case 1:
       if (wonFields[1] == wonFields[2] && wonFields[2] == wonFields[3] && wonFields[1] != "x") {
         return true;
@@ -714,162 +644,155 @@ function gameWon() {
   }
 }
 
-function tie() {
-  for(c = 1; c <= 9; c++) {
-    if (wonFields[c] == 0) {
-      wonFieldsPlayer1++;
+function tie() {                                                                //ein unentschiedenes Spiel auswerten
+  for(c = 1; c <= 9; c++) {                                                     //für alle 9 Felder
+    if (wonFields[c] == 0) {                                                    //wenn das Feld von Spieler 1 gewonnen wurde
+      wonFieldsPlayer1++;                                                       //Zahl der gewonnen Felder für Spieler 1 erhöhen
     }
-    else if (wonFields[c] == 1) {
-      wonFieldsPlayer2++;
+    else if (wonFields[c] == 1) {                                               //wenn das Feld von Spieler 1 gewonnen wurde
+      wonFieldsPlayer2++;                                                       //Zahl der gewonnen Felder für Spieler 2 erhöhen
     }
   }
 
-  if (wonFieldsPlayer1 > wonFieldsPlayer2) {
-    document.getElementById("winner").innerHTML = player1.name + " hat mit " + wonFieldsPlayer1 + " Feldern gewonnen!";
-    player = 0;
+  if (wonFieldsPlayer1 > wonFieldsPlayer2) {                                    //wenn Spieler 1 mehr Felder gewonnen hat
+    document.getElementById("winner").innerHTML = player1.name + " hat mit " + wonFieldsPlayer1 + " Feldern gewonnen!"; //Sieg Spieler 1 ausgeben
+    player = 0;                                                                 //Spielervariable für gameOver() ändern
   }
   else if (wonFieldsPlayer2 > wonFieldsPlayer1) {
-    document.getElementById("winner").innerHTML = player2.name + " hat mit " + wonFieldsPlayer2 + " Feldern gewonnen!";
-    player = 1;
+    document.getElementById("winner").innerHTML = player2.name + " hat mit " + wonFieldsPlayer2 + " Feldern gewonnen!"; //Sieg Spieler 2 ausgeben
+    player = 1;                                                                 //Spielervariable für gameOver() ändern
   }
-  else if (wonFieldsPlayer2 == wonFieldsPlayer1) {
-    document.getElementById("winner").innerHTML = "Unentschieden!";
+  else if (wonFieldsPlayer2 == wonFieldsPlayer1) {                              //wenn beide Spieler gleich viele Felder gewonnen haben
+    document.getElementById("winner").innerHTML = "Unentschieden!";             //Unentschieden ausgeben
+    player = 3;                                                                 //Spielervariable für gameOver() ändern
   }
 }
 
-function gameOver() {
-  if (player === 0) {
-    winner = player1.name;
-    document.body.style.background = player1.color;
+function gameOver() {                                                           //Spiel beenden
+  if (player === 0) {                                                           //wenn Spieler 1 gewonnen hat
+    winner = player1.name;                                                      //Gewinner speichern
+    document.body.style.background = player1.color;                             //Hintergrundfarbe des Dokuments dem Spieler entsprechend ändern
+    document.getElementById("winner").innerHTML = winner + " hat gewonnen!";    //Gewinner anzeigen
   }
-  else {
-    winner = player2.name;
-    document.body.style.background = player2.color;
+  else if (player == 1){                                                        //wenn Spieler 1 gewonnen hat
+    winner = player2.name;                                                      //Gewinner speichern
+    document.body.style.background = player2.color;                             //Hintergrundfarbe des Dokuments dem Spieler entsprechend ändern
+    document.getElementById("winner").innerHTML = winner + " hat gewonnen!";    //Gewinner anzeigen
   }
-  generateLeaderboard();
-  resetGame();
-  last = 1;
-  saveCookies(0);
+  else {                                                                        //kommt nur bei einem echten Unentschieden vor
+    winner = "";                                                                //kein Gewinner
+  }
 
-  document.getElementById("winner").innerHTML = winner + " hat gewonnen!";
-  document.getElementById("drawingArea").className = "invisible";
+  generateLeaderboard();                                                        //Bestenliste erzeugen
+  resetGame();                                                                  //alle Spielvariablen zurücksetzen
+  last = 1;                                                                     //letzten Zug als gesetzt markieren
+  saveCookies(0);                                                               //Spiel als beendet speichern
+
+  document.getElementById("drawingArea").className = "invisible";               //Spielfläche ausblenden
   document.getElementById("turn").className = "invisible";
-  document.getElementById("gameOver").className = "";
+  document.getElementById("gameOver").className = "";                           //GameOver anzeigen
 }
 
-function resetGame() {
-  for(a = 1; a <= 9; a++){
-    for(b = 1; b <= 9; b++){
-      field[a][b] = "x";
-    }
-  }
-  for(c = 1; c <= 9; c++) {
-    wonFields[c] = "x";
-  }
-  player = (Math.ceil(Math.random()*2)-1);
-  count = 1;
-  first = 1;
-  last = 0;
+/* ----------------------------------------------------------------------------
+  Bestenliste
+  ----------------------------------------------------------------------------*/
+
+function generateLeaderboard() {                                                //Bestenliste updaten
+  updateLeaderboard(player1.name);                                              //Update für Spieler 1
+  updateLeaderboard(player2.name);                                              //Update für Spieler 1
+  leaderboard.sort(sortLeaderboard);                                            //Bestenliste mit sortLeaderboard() sortieren
+  renderLeaderboard();                                                          //Bestenliste anzeigen
 }
 
-function resetLeaderboard() {
-  leaderboard = [];
-  document.cookie = "leaderboard=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-  renderLeaderboard();
-}
-
-function generateLeaderboard() {
-  updateLeaderboard(player1.name);
-  updateLeaderboard(player2.name);
-  leaderboard.sort(sortLeaderboard);
-  renderLeaderboard();
-}
-
-function sortLeaderboard(a, b) {
-  var diff = (b[1] / b[2]) - (a[1] / a[2]);
-  if (diff === 0) {
-    return b[2] - a[2];
-  }
-  else {
-    return diff;
-  }
-}
-
-function updatePlayer(playerEnd, i) {
-  if (winner == playerEnd) {
-    leaderboard[i][1]++;
-  }
-  leaderboard[i][2]++;
-}
-
-function insertNewPlayer(playerEnd) {
-  playerTemp = new Array(3);
-  playerTemp[0] = playerEnd;
-  if (winner == playerEnd) {
-    playerTemp[1] = 1;
-  }
-  else {
-    playerTemp[1] = 0;
-  }
-  playerTemp[2] = 1;
-
-  leaderboard.push(playerTemp);
-  newPlayer = false;
-}
-
-function updateLeaderboard(playerEnd) {
-  if (leaderboard.length >= 2) {
-    for (var i = 0; i < leaderboard.length; i++) {
-      if (playerEnd == leaderboard[i][0]) {
-        updatePlayer(playerEnd, i);
-        newPlayer = false;
-        break;
+function updateLeaderboard(playerEnd) {                                         //Spieler in Bestenlist aktualisieren
+  if (leaderboard.length >= 2) {                                                //nur wenn schon Einträge in der Bestenlist vorhanden sind
+    for (var i = 0; i < leaderboard.length; i++) {                              //für alle Einträge in der Bestenliste
+      if (playerEnd == leaderboard[i][0]) {                                     //wenn Spieler schon einen Eintrag in der Bestenliste hat
+        updatePlayer(playerEnd, i);                                             //Spieler aktualisieren
+        newPlayer = false;                                                      //Spieler wurde gefunden
+        break;                                                                  //Funktionsabbruch
       }
-      else {
-        newPlayer = true;
+      else {                                                                    //wenn Spieler nicht gefunden wurde
+        newPlayer = true;                                                       //Spieler ist neu
       }
     }
   }
-  else {
-    newPlayer = true;
+  else {                                                                        //wenn noch keine Einträge in der Bestenlist vorhanden sind
+    newPlayer = true;                                                           //Spieler ist neu
   }
-  if (newPlayer) {
-    insertNewPlayer(playerEnd);
+  if (newPlayer) {                                                              //wenn Spieler neu ist
+    insertNewPlayer(playerEnd);                                                 //Spieler einfügen
   }
 }
 
-function renderLeaderboard() {
-  table = document.getElementById("leaderboardTable");
-  numberOfRows = table.children[0].children.length;
+function updatePlayer(playerEnd, i) {                                           //existierenden Spieler aktualisieren
+  if (winner == playerEnd) {                                                    //wenn Spieler gewonnen hat
+    leaderboard[i][1]++;                                                        //erhöhen des gewonnen Counts
+  }
+  leaderboard[i][2]++;                                                          //erhöhen des Counts für gespielte Spiele (unabhängig von Sieg oder Niederlage)
+}
 
-  if (numberOfRows > 1) {
-    for (var k = 1; k < numberOfRows; k++) {
-      table.deleteRow(1);
+function insertNewPlayer(playerEnd) {                                           //neuen Spieler in die Bestenliste einfügen
+  playerTemp = new Array(3);                                                    //neues Array für den Spieler anlegen
+  playerTemp[0] = playerEnd;                                                    //Array[0] ist Name
+  if (winner == playerEnd) {                                                    //wenn neuer Spieler gewonnen hat
+    playerTemp[1] = 1;                                                          //hat er ein Spiel gewonnen
+  }                                                                             //Array[1] ist Anzahl Siege
+  else {
+    playerTemp[1] = 0;                                                          //ansonsten keins
+  }
+  playerTemp[2] = 1;                                                            //Array[2] ist Anzahl Spiele (gewonnen & verloren)
+
+  leaderboard.push(playerTemp);                                                 //neuen Spieler an's Ende der Bestenliste anhängen
+  newPlayer = false;                                                            //Variable zurück setzen
+}
+
+function sortLeaderboard(a, b) {                                                //Funktion nach der die Bestenlist sortiert wird
+  var diff = (b[1] / b[2]) - (a[1] / a[2]);                                     //Differenz in den prozentualen Gewinnen von Spieler a und Spieler b berechnen
+  if (diff === 0) {                                                             //wenn die Spieler prozentual gleich viele Spiele gewonnen haben
+    return b[2] - a[2];                                                         //wird nach der Anzahl an gesamt gespielten Spielen sortiert
+  }
+  else {
+    return diff;                                                                //ansonsten wird einfach nach der Prozentzahl gewonnnener Spiele sortiert
+  }
+}
+
+function renderLeaderboard() {                                                  //Anzeigen der Bestenliste
+  table = document.getElementById("leaderboardTable");                          //Variable für die Bestenliste
+  numberOfRows = table.children[0].children.length;                             //Anzahl an bereits dargestellten Reihen
+
+  if (numberOfRows > 1) {                                                       //wenn mehr als nur die Kopfzeile vorhanden ist
+    for (var k = 1; k < numberOfRows; k++) {                                    //alle Zeilen
+      table.deleteRow(1);                                                       //löschen
     }
   }
-  for (var j = 0; j < leaderboard.length; j++) {
-    row = table.insertRow(j+1);
-    placeCell = row.insertCell(0);
-    nameCell = row.insertCell(1);
-    wonCell = row.insertCell(2);
-    playedCell = row.insertCell(3);
+  for (var j = 0; j < leaderboard.length; j++) {                                //für alle Einträge in der Bestenliste
+    row = table.insertRow(j+1);                                                 //neue Zeile anfügen
+    placeCell = row.insertCell(0);                                              //Zellen für Platzierung,
+    nameCell = row.insertCell(1);                                               //Name,
+    wonCell = row.insertCell(2);                                                //gewonnene Spiele und
+    playedCell = row.insertCell(3);                                             //gespielte Spiel anlegen
 
-    placeCell.innerHTML = j+1 + ".";
-    nameCell.innerHTML = leaderboard[j][0];
-    wonCell.innerHTML = leaderboard[j][1];
-    playedCell.innerHTML = leaderboard[j][2];
+    placeCell.innerHTML = j+1 + ".";                                            //Platz einfügen
+    nameCell.innerHTML = leaderboard[j][0];                                     //Name einfügen
+    wonCell.innerHTML = leaderboard[j][1];                                      //gewonnene Spiele einfügen
+    playedCell.innerHTML = leaderboard[j][2];                                   //gespielte Spiele einügen
 
-    wonCell.className = "rightText";
+    wonCell.className = "rightText";                                            //Zahlen rechtsbündig formatieren
     playedCell.className = "rightText";
   }
 }
 
-function saveCookies(gameRunning) {
+/* ----------------------------------------------------------------------------
+  Cookies
+  ----------------------------------------------------------------------------*/
+
+function saveCookies(gameRunning) {                                             //speichert Variablen in Cookies
   var d = new Date();
-  d.setTime(d.getTime() + (365*10*24*60*60*1000));
+  d.setTime(d.getTime() + (365*10*24*60*60*1000));                              //erstellen eines Verfallsdatums für Die zu speichernden Cookies
   var expires = "expires="+d.toUTCString();
 
-  document.cookie = "leaderboard=" + leaderboard + "; " + expires;
+  document.cookie = "leaderboard=" + leaderboard + "; " + expires;              //Speichern der Variablen in Cookies
 
   document.cookie = "player1.name=" + player1.name + "; " + expires;
   document.cookie = "player1.color=" + player1.color + "; " + expires;
@@ -879,8 +802,8 @@ function saveCookies(gameRunning) {
   document.cookie = "player2.color=" + player2.color + "; " + expires;
   document.cookie = "player2.colorBack=" + player2.colorBack + "; " + expires;
 
-  if (gameRunning === 1) {
-    document.cookie = "gameRunning=1; " + expires;
+  if (gameRunning === 1) {                                                      //wenn gespeichert wird, während ein Spiel läuft
+    document.cookie = "gameRunning=1; " + expires;                              //Speichern der Variablen
     document.cookie = "nextField=" + nextField + "; " + expires;
     document.cookie = "count=" + count + "; " + expires;
     document.cookie = "lastTurn=" + last + "; " + expires;
@@ -888,7 +811,7 @@ function saveCookies(gameRunning) {
     document.cookie = "field=" + field + "; " + expires;
     document.cookie = "wonFields=" + wonFields + "; " + expires;
   }
-  else {
+  else {                                                                        //ansonsten leere Cookies speichern
     document.cookie = "gameRunning=0; " + expires;
     document.cookie = "lastTurn=" + last + "; " + expires;
     document.cookie = "nextField=; " + expires;
@@ -899,8 +822,75 @@ function saveCookies(gameRunning) {
   }
 }
 
-function clearAllCookies() {
-  document.cookie = "firstGame=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+function getCookie(cname) {                                                     //liest Inhalt eines Cookies aus
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) === 0) return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+function getField() {                                                           //speichert in Cookie gespeichertes Spiel in Array
+  fieldCookie = getCookie("field").split(",");                                  //Cookie in Teile teilen
+  field = new Array(10);
+  for (a = 1; a <= 9; a++){
+    field[a] = new Array(10);
+    for(b = 1; b <= 9; b++){
+      field[a][b] = fieldCookie[(a-1) * 10 + (b+1)];                            //Abspeichern der Teile des Cookies in Array
+      if (field[a][b] != "x") {                                                 //wenn jemand das Feld besetzt hat
+        if (field[a][b] === "0") {                                              //wird das Feld je nach Spieler eingefärbt
+          document.getElementById(a * 10 + b).style.background = player1.color;
+        }
+        else {
+          if (field[a][b] == 1) {
+            document.getElementById(a * 10 + b).style.background = player2.color;
+          }
+        }
+      }
+      else {                                                                    //ansonsten im StandardGrau
+        document.getElementById(a * 10 + b).style.background = "#c0c5ce";
+      }
+    }
+  }
+}
+
+function getWonFields() {                                                       //speichert in Cookie gespeicherte gewonnene Felder in Array
+  wonFieldsCookie = getCookie("wonFields").split(",");                          //Cookie in Teile teilen
+  wonFields = new Array(10);
+  for(c = 1; c <= 9; c++) {
+    wonFields[c] = wonFieldsCookie[c];                                          //Abspeichern der Teile des Cookies in Array
+    if (wonFields[c] === "0") {                                                 //Färben der Felder je nach Besitzer
+      document.getElementById("field" + c).style.background = player1.color;
+    }
+    else {
+      if (wonFields[c] == 1){
+        document.getElementById("field" + c).style.background = player2.color;
+      }
+    }
+  }
+}
+
+function getLeaderboard() {                                                     //speichert in Cookie gespeicherte Bestenliste in Array
+  leaderboardCookie = getCookie("leaderboard").split(",");                      //Cookie in Teile teilen
+  if (leaderboardCookie.length === 1) {                                         //wenn Cookie leer
+    leaderboard = [];                                                           //leere Variable anlegen
+  }
+  else {
+    leaderboard = new Array(leaderboardCookie.length / 3);                      //neues Array mit entsprechender Länge anlegen
+    for (a = 0; a < leaderboardCookie.length / 3; a++) {
+      leaderboard[a] = new Array(3);
+      for (b = 0; b < 3; b++) {
+        leaderboard[a][b] = leaderboardCookie[(a * 3) + b];                     //Abspeichern der Teile des Cookies in Array
+      }
+    }
+  }
+}
+
+function clearAllCookies() {                                                    //löscht ALLE Cookies
+  document.cookie = "firstGame=; expires=Thu, 01 Jan 1970 00:00:00 UTC";        //ersetzen der Cookies durch einen gleichen Cookie mit Ablaufdatum in der Vergangenheit
   document.cookie = "gameRunning=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
   document.cookie = "nextField=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
   document.cookie = "count=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
@@ -920,12 +910,16 @@ function clearAllCookies() {
   document.cookie = "player2.colorBack=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 }
 
-function allCookiesToCommandLine() {
+function allCookiesToCommandLine() {                                            //as the name says
   allCookies = document.cookie;
   console.log(allCookies);
 }
 
-function reset() {
+/* ----------------------------------------------------------------------------
+  reset
+  ----------------------------------------------------------------------------*/
+
+function reset() {                                                              //zurücksetzen des Formulars
   document.info1.player1Name.value = "Spieler1";
   document.getElementById("spieler1colK").value = "#ab4143";
   document.getElementById("spieler1colF").value = "#cc7a7c";
@@ -935,10 +929,69 @@ function reset() {
   document.getElementById("spieler2colF").value = "#7ab1cc";
 }
 
-function newGame() {
+function startReset() {                                                         //Funktion vor dem Zurücksetzen der Bestenliste
+  document.getElementById("confirmResetLeaderboard").className = "";            //Anzeigen des Bestätigungsdialogs
+  document.getElementById("leaderboard").className = "invisible";
+  document.getElementById("gameOver").className = "invisible";
+}
+
+function confirm(what, status) {                                                //Bestätigung für unwiderrufbare Aktionen erfordern (what = was bestätigt werden soll; status = (J/N))
+  if (what == "resetGame") {                                                    //wenn das Spiel überschrieben werden soll
+    if (status) {                                                               //Spiel soll zurück gesetzt werden
+     resetGame();                                                               //Spiel zurück setzen
+     for(a = 1; a <= 9; a++){                                                   //Farben zurück setzen
+       document.getElementById(a).style.background = "#4f5b66";
+       for(b = 1; b <= 9; b++){
+         document.getElementById(a * 10 + b).style.background = "#c0c5ce";
+       }
+     }
+     for(c = 1; c <= 9; c++) {
+       document.getElementById("field" + c).style.background = "#4f5b66";
+     }
+     document.getElementById("confirm").className = "invisible";                //alles ausblenden
+     document.getElementById("menu").className = "invisible";
+     document.getElementById("leaderboard").className = "invisible";
+     document.getElementById("startTable").className = "";                      //Eingabe einblenden
+   }
+   else {                                                                       //ansonsten nichts tun
+     document.getElementById("confirm").className = "invisible";                //Dialog ausblenden
+     document.getElementById("menu").className = "";                            //außer Menu wieder einzublenden
+   }
+  }
+  else if (what == "resetLeaderboard") {                                        //wenn es um die Bestenliste geht
+    if (status == 1) {                                                          //Bestenliste soll zurück gesetzt werden
+      resetLeaderboard();                                                       //Bestenliste zurück setzen
+    }
+    document.getElementById("confirmResetLeaderboard").className = "invisible"; //Dialog ausblenden
+    document.getElementById("leaderboard").className = "";                      //Bestenliste einblenden
+  }
+}
+
+function resetLeaderboard() {                                                   //Bestenliste zurücksetzten
+  leaderboard = [];                                                             //leeren der Variable
+  document.cookie = "leaderboard=; expires=Thu, 01 Jan 1970 00:00:00 UTC";      //löschen des Cookies
+  renderLeaderboard();                                                          //leeren der Tabelle
+}
+
+function resetGame() {                                                          //Spiel zurücksetzen
+  for(a = 1; a <= 9; a++){
+    for(b = 1; b <= 9; b++){
+      field[a][b] = "x";                                                        //Leeren des Feldspeichers
+    }
+  }
+  for(c = 1; c <= 9; c++) {
+    wonFields[c] = "x";                                                         //Leeren des Speichers der gewonnenen Felder
+  }
+  player = (Math.ceil(Math.random()*2)-1);                                      //Zurücksetzen der Variablen
+  count = 1;
+  first = 1;
+  last = 0;
+}
+
+function newGame() {                                                            //startet ein neues Spiel nachdem ein anderes entschieden wurde
   resetGame();
   saveCookies(0);
-  document.body.style.background = "#4f5b66";
+  document.body.style.background = "#4f5b66";                                   //zurücksetzen aller Farben
   for(a = 1; a <= 9; a++){
     document.getElementById(a).style.background = "#4f5b66";
     for(b = 1; b <= 9; b++){
@@ -949,17 +1002,13 @@ function newGame() {
     document.getElementById("field" + c).style.background = "#4f5b66";
   }
 
-  document.getElementById("drawingArea").className = "invisible";
+  document.getElementById("drawingArea").className = "invisible";               //Ausblenden aller Teile und anzeigen der Starttabelle
   document.getElementById("menu").className = "invisible";
   document.getElementById("gameOver").className = "invisible";
   document.getElementById("leaderboard").className = "invisible";
   document.getElementById("startTable").className = "";
 }
 
-function main() {
-  checkGameRunning();
-  init();
-  renderLeaderboard();
-}
+// ----------------------------------------------------------------------------
 
 window.onload = main;
