@@ -298,6 +298,15 @@ function draw() {
   player2.color = document.getElementById("spieler2colK").value;
   player2.colorBack = document.getElementById("spieler2colF").value;
 
+  if (player1.name == player2.name) {
+    alert("Bitte unterschiedliche Namen wählen.");
+    return 0;
+  }
+  if (player1.color == player2.color || player1.color == player1.colorBack || player2.color == player2.colorBack || player1.color == player2.colorBack || player2.color == player1.colorBack) {
+    alert("Bitte unterschiedliche Farben wählen.");
+    return 0;
+  }
+
   document.getElementById("startTable").className = "invisible";
   toggle("drawingArea");
   document.getElementById("turn").className = "";
