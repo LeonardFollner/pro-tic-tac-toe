@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pro Tic Tac Toe</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type="text/javascript" src="Please.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body class="centerText">
+  <div class ="parent">
+    <div class="element">
+
+      <h1>Pro Tic Tac Toe</h1>
+
+      <div id = "menu">
+        <p class = "pointer buttonSimple center" onclick = "startGame()">Neues Spiel</p>
+        <p class = "pointer buttonSimple center invisible" id ="continueButton" onclick = "continueGame()">Spiel fortsetzen</p>
+        <p class = "pointer buttonSimple center" onclick = "toggle('leaderboard')">Bestenliste</p>
+      </div>
+
+      <div id = "confirm" class = "invisible">
+        <p>Bist du dir sicher, dass du das laufende Spiel l&ouml;schen willst?</p><br>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetGame', 1)">Ja</p>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetGame', 0)">Nein</p>
+      </div>
+
+      <div id = "confirmResetLeaderboard" class = "invisible">
+        <p>Bist du dir sicher, dass du die Bestenliste l&ouml;schen willst?</p><br>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetLeaderboard', 1)">Ja</p>
+        <p class = "inline-block buttonSimple pointer" onclick="confirm('resetLeaderboard', 0)">Nein</p>
+      </div>
+
+      <div id = "startTable" class = "invisible">
+        <p class = "hint underline" onclick = "showMenu()">zum Menu</p>
+        <table id="data" align="center" cellspacing="2" cellpadding="2" border="0">
+          <tr>
+            <th>Spielername:</th>
+            <td><form name="info1" onsubmit="return false"><input type="text" name="player1Name" id="spieler1Name" value="Spieler1"></form></td>
+            <td><form name="info2" onsubmit="return false"><input type="text" name="player2Name" id="spieler2Name" value="Spieler2"></form></td>
+            <td><input type="button" value="Start" onclick="draw()"></td>
+          </tr>
+          <tr>
+            <th>Farbe:</th>
+            <td><input type="color" id="spieler1colK" value="#ab4143"></td>
+            <td><input type="color" id="spieler2colK" value="#448eb3"></td>
+            <td><input type="button" value="Reset" onclick="reset()"></td>
+          </tr>
+          <!--<tr>
+            <th>Hintergrundfarbe:</th>
+            <td><input type="color" id="spieler1colF" value="#cc7a7c"></td>
+            <td><input type="color" id="spieler2colF" value="#7ab1cc"></td>
+            <td><input type="button" value="Reset" onclick="reset()"></td>
+          </tr>-->
+          <tr>
+            <td></td>
+            <td colspan="2" class = "hint">Farbcodes gibts <a href="http://html-color-codes.info/webfarben_hexcodes/" target="_blank">hier</a>!</td>
+            <td></td>
+          </tr>
+        </table>
+      </div>
+
+      <div id = "drawingArea" class = "invisible">
+        <table id ="feld" border="5" cellspacing="10" cellpadding="10" align="center" frame="void">
+          <tr>
+            <td id = "field1">
+              <table id = "1" border="1" cellspacing="5">
+                <tr>
+                  <td id = "11" class="box" onclick="klick(this.id)"></td>
+                  <td id = "12" class="box" onclick="klick(this.id)"></td>
+                  <td id = "13" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "14" class="box" onclick="klick(this.id)"></td>
+                  <td id = "15" class="box" onclick="klick(this.id)"></td>
+                  <td id = "16" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "17" class="box" onclick="klick(this.id)"></td>
+                  <td id = "18" class="box" onclick="klick(this.id)"></td>
+                  <td id = "19" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+            <td id = "field2">
+              <table id = "2" border="1" cellspacing="5">
+                <tr>
+                  <td id = "21" class="box" onclick="klick(this.id)"></td>
+                  <td id = "22" class="box" onclick="klick(this.id)"></td>
+                  <td id = "23" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "24" class="box" onclick="klick(this.id)"></td>
+                  <td id = "25" class="box" onclick="klick(this.id)"></td>
+                  <td id = "26" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "27" class="box" onclick="klick(this.id)"></td>
+                  <td id = "28" class="box" onclick="klick(this.id)"></td>
+                  <td id = "29" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+            <td id = "field3">
+              <table id = "3" border="1" cellspacing="5">
+                <tr>
+                  <td id = "31" class="box" onclick="klick(this.id)"></td>
+                  <td id = "32" class="box" onclick="klick(this.id)"></td>
+                  <td id = "33" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "34" class="box" onclick="klick(this.id)"></td>
+                  <td id = "35" class="box" onclick="klick(this.id)"></td>
+                  <td id = "36" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "37" class="box" onclick="klick(this.id)"></td>
+                  <td id = "38" class="box" onclick="klick(this.id)"></td>
+                  <td id = "39" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td id = "field4">
+              <table id = "4" border="1" cellspacing="5">
+                <tr>
+                  <td id = "41" class="box" onclick="klick(this.id)"></td>
+                  <td id = "42" class="box" onclick="klick(this.id)"></td>
+                  <td id = "43" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "44" class="box" onclick="klick(this.id)"></td>
+                  <td id = "45" class="box" onclick="klick(this.id)"></td>
+                  <td id = "46" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "47" class="box" onclick="klick(this.id)"></td>
+                  <td id = "48" class="box" onclick="klick(this.id)"></td>
+                  <td id = "49" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+            <td id = "field5">
+              <table id = "5" border="1" cellspacing="5">
+                <tr>
+                  <td id = "51" class="box" onclick="klick(this.id)"></td>
+                  <td id = "52" class="box" onclick="klick(this.id)"></td>
+                  <td id = "53" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "54" class="box" onclick="klick(this.id)"></td>
+                  <td id = "55" class="box" onclick="klick(this.id)"></td>
+                  <td id = "56" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "57" class="box" onclick="klick(this.id)"></td>
+                  <td id = "58" class="box" onclick="klick(this.id)"></td>
+                  <td id = "59" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+            <td id = "field6">
+              <table id = "6" border="1" cellspacing="5">
+                <tr>
+                  <td id = "61" class="box" onclick="klick(this.id)"></td>
+                  <td id = "62" class="box" onclick="klick(this.id)"></td>
+                  <td id = "63" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "64" class="box" onclick="klick(this.id)"></td>
+                  <td id = "65" class="box" onclick="klick(this.id)"></td>
+                  <td id = "66" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "67" class="box" onclick="klick(this.id)"></td>
+                  <td id = "68" class="box" onclick="klick(this.id)"></td>
+                  <td id = "69" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td id = "field7">
+              <table id = "7" border="1" cellspacing="5">
+                <tr>
+                  <td id = "71" class="box" onclick="klick(this.id)"></td>
+                  <td id = "72" class="box" onclick="klick(this.id)"></td>
+                  <td id = "73" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "74" class="box" onclick="klick(this.id)"></td>
+                  <td id = "75" class="box" onclick="klick(this.id)"></td>
+                  <td id = "76" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "77" class="box" onclick="klick(this.id)"></td>
+                  <td id = "78" class="box" onclick="klick(this.id)"></td>
+                  <td id = "79" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+            <td id = "field8">
+              <table id = "8" border="1" cellspacing="5">
+                <tr>
+                  <td id = "81" class="box" onclick="klick(this.id)"></td>
+                  <td id = "82" class="box" onclick="klick(this.id)"></td>
+                  <td id = "83" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "84" class="box" onclick="klick(this.id)"></td>
+                  <td id = "85" class="box" onclick="klick(this.id)"></td>
+                  <td id = "86" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "87" class="box" onclick="klick(this.id)"></td>
+                  <td id = "88" class="box" onclick="klick(this.id)"></td>
+                  <td id = "89" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+            <td id = "field9">
+              <table id = "9" border="1" cellspacing="5">
+                <tr>
+                  <td id = "91" class="box" onclick="klick(this.id)"></td>
+                  <td id = "92" class="box" onclick="klick(this.id)"></td>
+                  <td id = "93" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "94" class="box" onclick="klick(this.id)"></td>
+                  <td id = "95" class="box" onclick="klick(this.id)"></td>
+                  <td id = "96" class="box" onclick="klick(this.id)"></td>
+                </tr>
+                <tr>
+                  <td id = "97" class="box" onclick="klick(this.id)"></td>
+                  <td id = "98" class="box" onclick="klick(this.id)"></td>
+                  <td id = "99" class="box" onclick="klick(this.id)"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div id = "turn" class ="invisible">
+        <p class = "inline-block">Am Zug:</p>
+        <p id="turn1" class = "button inline-block"></p>
+        <p id="turn2" class = "button inline-block"></p>
+      </div>
+
+      <div id = "gameOver" class="invisible">
+        <p id = "winner"></p>
+        <button type="button" class="buttonSimple center pointer" onclick="toggle('drawingArea')">Spiel zeigen</button>
+        <button type="button" class ="buttonSimple center pointer" onclick="showMenu()">Menu</button>
+        <button type="button" class ="buttonSimple center pointer" onclick="newGame()">Neues Spiel</button>
+      </div>
+
+      <div id = "leaderboard" class="invisible">
+        <p class = "hint underline" onclick = "startReset()">zur&uuml;cksetzen</p>
+        <table id = "leaderboardTable" class = "leaderboard center">
+          <tr>
+            <td></td>
+            <th>Name</th>
+            <th>gewonnen</th>
+            <th>gespielt</th>
+          </tr>
+          <tr>
+            <td colspan="4">Es sind noch keine Eintr&auml;ge vorhanden</td>
+          </tr>
+        </table>
+        <button type="button" class ="pointer buttonSimple" onclick="showMenu()">Menu</button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

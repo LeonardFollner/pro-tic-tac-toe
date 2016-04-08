@@ -67,6 +67,17 @@ function init() {                                                               
   else {                                                                        //wenn es nicht der erste Aufruf der Seite ist
     loadVariables();                                                            //Variablen aus dem Speicher laden
   }
+
+  player1.colorBack = Please.make_scheme(Please.HEX_to_HSV(player1.color), {scheme_type: "monochromatic", format: "hex"})[3];
+  player2.colorBack = Please.make_scheme(Please.HEX_to_HSV(player2.color), {scheme_type: "monochromatic", format: "hex"})[3];
+
+  document.info1.player1Name.value = player1.name;                              //Formularfelder auf die gespeicherten Werte setzen
+  document.getElementById("spieler1colK").value = player1.color;
+  //document.getElementById("spieler1colF").value = player1.colorBack;
+
+  document.info2.player2Name.value = player2.name;
+  document.getElementById("spieler2colK").value = player2.color;
+  //document.getElementById("spieler2colF").value = player2.colorBack;
 }
 
 function loadVariables() {                                                      //lädt bestehende Variablen
@@ -88,14 +99,6 @@ function loadVariables() {                                                      
   player2.name = getCookie("player2.name");
   player2.color = getCookie("player2.color");
   player2.colorBack = getCookie("player2.colorBack");
-
-  document.info1.player1Name.value = player1.name;                              //Formularfelder auf die gespeicherten Werte setzen
-  document.getElementById("spieler1colK").value = player1.color;
-  document.getElementById("spieler1colF").value = player1.colorBack;
-
-  document.info2.player2Name.value = player2.name;
-  document.getElementById("spieler2colK").value = player2.color;
-  document.getElementById("spieler2colF").value = player2.colorBack;
 
   if (getCookie("gameRunning") == 1){                                           //wenn ein Spiel unterbrochen und gespeichert wurde
     getField();                                                                 //Laden des Feldes
@@ -203,45 +206,35 @@ function startGame() {                                                          
 function draw() {                                                               //letzte Checks, Anzeigen der Spielfläche
   player1.name = document.info1.player1Name.value;                              //Abspeichern der Eingaben in Variablen
   player1.color = document.getElementById("spieler1colK").value;
-  player1.colorBack = document.getElementById("spieler1colF").value;
+  //player1.colorBack = document.getElementById("spieler1colF").value;
+  player1.colorBack = Please.make_scheme(Please.HEX_to_HSV(player1.color), {scheme_type: "monochromatic", format: "hex"})[3];
 
   player2.name = document.info2.player2Name.value;
   player2.color = document.getElementById("spieler2colK").value;
-  player2.colorBack = document.getElementById("spieler2colF").value;
+  //player2.colorBack = document.getElementById("spieler2colF").value;
+  player2.colorBack = Please.make_scheme(Please.HEX_to_HSV(player2.color), {scheme_type: "monochromatic", format: "hex"})[3];
 
   if (player1.name == player2.name) {                                           //Namen müssen sich unterscheiden
     alert("Bitte wählt unterschiedliche Namen.");                               //Hinweis
     return 0;                                                                   //Abbruch
   }
-  if (player1.color[0] != '#') {
-    player1.color = '#' + player1.color;
-  }
-  if (player2.color[0] != '#') {
-    player2.color = '#' + player2.color;
-  }
-  if (player1.colorBack[0] != '#') {
-    player1.colorBack = '#' + player1.colorBack;
-  }
-  if (player2.colorBack[0] != '#') {
-    player2.colorBack = '#' + player2.colorBack;
-  }
   if (player1.color == player2.color || player1.color == player1.colorBack || player2.color == player2.colorBack || player1.color == player2.colorBack || player2.color == player1.colorBack) { //Farben müssen sich unterscheiden
     alert("Bitte wählt unterschiedliche Farben.");                              //Hinweis
     return 0;                                                                   //Abbruch
   }
-  if (player1.color == "#4f5b66" || player1.color == "#c0c5ce") {               //Farben müssen sich vom Hintergrund unterscheiden
+  if (player1.color == "#4f5b66") {                                             //Farben müssen sich vom Hintergrund unterscheiden
     alert(player1.name + ", bitte wähle eine andere Farbe.");                   //Hinweis
     return 0;                                                                   //Abbruch
   }
-  if (player1.colorBack == "#c0c5ce" || player1.colorBack == "#4f5b66") {
+  if (player1.color == "#c0c5ce") {
     alert(player1.name + ", bitte wähle eine andere Hintergrundfarbe.");        //Hinweis
     return 0;                                                                   //Abbruch
   }
-  if (player2.color == "#4f5b66" || player2.color == "#c0c5ce") {               //Farben müssen sich vom Hintergrund unterscheiden
+  if (player2.color == "#4f5b66") {                                             //Farben müssen sich vom Hintergrund unterscheiden
     alert(player2.name + ", bitte wähle eine andere Farbe.");                   //Hinweis
     return 0;                                                                   //Abbruch
   }
-  if (player2.colorBack == "#c0c5ce" || player2.colorBack == "#4f5b66") {
+  if (player2.color == "#c0c5ce") {
     alert(player2.name + ", bitte wähle eine andere Hintergrundfarbe.");        //Hinweis
     return 0;                                                                   //Abbruch
   }
@@ -950,11 +943,11 @@ function allCookiesToCommandLine() {                                            
 function reset() {                                                              //zurücksetzen des Formulars
   document.info1.player1Name.value = "Spieler1";
   document.getElementById("spieler1colK").value = "#ab4143";
-  document.getElementById("spieler1colF").value = "#cc7a7c";
+  //document.getElementById("spieler1colF").value = "#cc7a7c";
 
   document.info2.player2Name.value = "Spieler2";
   document.getElementById("spieler2colK").value = "#448eb3";
-  document.getElementById("spieler2colF").value = "#7ab1cc";
+  //document.getElementById("spieler2colF").value = "#7ab1cc";
 }
 
 function startReset() {                                                         //Funktion vor dem Zurücksetzen der Bestenliste

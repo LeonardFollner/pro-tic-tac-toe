@@ -26,13 +26,6 @@ input {
   color: #2b303b;
 }
 
-::selection {
-  background: #c0c5ce; /* WebKit/Blink Browsers */
-}
-::-moz-selection {
-  background: #c0c5ce; /* Gecko Browsers */
-}
-
 .box {
   background-color: #c0c5ce;
   height: 50px;
