@@ -549,7 +549,7 @@ function gameWon() {                                                            
       if (wonFields[1] == wonFields[2] && wonFields[2] == wonFields[3] && wonFields[1] != "x") {
         return true;
       }
-      else if (wonFields[1] == wonFields[5] && wonFields[5] == wonFields[6] && wonFields[1] != "x") {
+      else if (wonFields[1] == wonFields[5] && wonFields[5] == wonFields[9] && wonFields[1] != "x") {
         wonFields[currentField] = player;
         return true;
       }
@@ -602,10 +602,18 @@ function gameWon() {                                                            
       }
       break;
     case 5:
-      if (wonFields[5] == wonFields[1] && wonFields[1] == wonFields[3] && wonFields[5] != "x") {
+      if (wonFields[5] == wonFields[1] && wonFields[1] == wonFields[9] && wonFields[5] != "x") {
         return true;
       }
       else if (wonFields[5] == wonFields[3] && wonFields[3] == wonFields[7] && wonFields[5] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else if (wonFields[5] == wonFields[4] && wonFields[4] == wonFields[6] && wonFields[5] != "x") {
+        wonFields[currentField] = player;
+        return true;
+      }
+      else if (wonFields[5] == wonFields[2] && wonFields[2] == wonFields[8] && wonFields[5] != "x") {
         wonFields[currentField] = player;
         return true;
       }
