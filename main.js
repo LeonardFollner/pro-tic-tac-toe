@@ -201,11 +201,21 @@ function startGame() {                                                          
 }
 
 function draw() {                                                               //letzte Checks, Anzeigen der Spielfläche
-  player1.name = document.info1.player1Name.value;                              //Abspeichern der Eingaben in Variablen
+  if (document.info1.player1Name.value) {
+    player1.name = document.info1.player1Name.value;                              //Abspeichern der Eingaben in Variablen
+  }
+  else {
+    player1.name = "Spieler1";
+  }
   player1.color = document.getElementById("spieler1colK").value;
   player1.colorBack = document.getElementById("spieler1colF").value;
 
-  player2.name = document.info2.player2Name.value;
+  if (document.info2.player2Name.value) {
+    player2.name = document.info2.player2Name.value;                              //Abspeichern der Eingaben in Variablen
+  }
+  else {
+    player2.name = "Spieler2";
+  }
   player2.color = document.getElementById("spieler2colK").value;
   player2.colorBack = document.getElementById("spieler2colF").value;
 
